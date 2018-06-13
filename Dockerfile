@@ -49,8 +49,12 @@ RUN sudo groupadd --system courses
 # Add cs50 user
 RUN sudo adduser --gecos "CS50,,,," --ingroup courses --disabled-login --system cs50
 
+# Change default workdir
+WORKDIR /home/ubuntu
+
 # Symlink .c9 files and start openssh daemon
-CMD mkdir --parent /home/ubuntu/.c9 && \
+CMD sudo chown --recursive ubuntu:ubuntu /home/ubuntu && \
+    mkdir --parent /home/ubuntu/.c9 /home/ubuntu/.ssh && \
     ln --symbolic --force /opt/c9/* /home/ubuntu/.c9 && \
     sudo chown --recursive ubuntu:ubuntu /home/ubuntu && \
     sudo /usr/sbin/sshd -D
