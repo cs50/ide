@@ -26,15 +26,14 @@ RUN wget --directory-prefix /tmp https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stab
     sudo chmod a+x /usr/local/bin/ngrok
 
 # Download and install Cloud9 SSH installer
-RUN curl --silent --location https://raw.githubusercontent.com/c9/install/master/install.sh > /tmp/c9install && \
-    chmod a+x /tmp/c9install && \
+COPY ./c9install /tmp/c9install
+RUN sudo chmod a+x /tmp/c9install && \
     sudo mkdir /opt/c9 && \
     sudo chown --recursive ubuntu:ubuntu /opt/c9 && \
-    sed --in-place 's#C9_DIR=.*#C9_DIR=/opt/c9#' /tmp/c9install && \
     /tmp/c9install
 
 # Install Python packages
-RUN pip3 install \
+RUN sudo --set-home pip3 install \
         nltk \
         plotly \
         pylint \
@@ -48,6 +47,8 @@ RUN sudo groupadd --system courses
 
 # Add cs50 user
 RUN sudo adduser --gecos "CS50,,,," --ingroup courses --disabled-login --system cs50
+
+RUN echo | sudo tee /etc/motd
 
 # Change default workdir
 WORKDIR /home/ubuntu
