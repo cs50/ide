@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# Check args
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 PROGRAM [ARGUMENT ...]"
+    exit 1
+fi
+
+if ! [ -f "$1" ]; then
+    echo -n "debug50: $1: "
+    if [ -d "$1" ]; then
+        echo "Not a file"
+    else
+        echo "No such file"
+    fi
+
+    exit 1
+fi
+
+# Create named pipe for netcat and ikp3db communication
+if [ ! -p /home/ubuntu/.c9/ikp3dbpipe ]; then
+    mkfifo /home/ubuntu/.c9/ikp3dbpipe
+fi
+
+# PID of current execution
+PID=$$
+if [ $(file "$1" | grep -o executable) ]; then
+    if ! [ "$(readelf -wL "$1")" ]; then
+        echo "Can't debug this program! Are you sure you compiled it with -ggdb?"
+        exit 1
+    fi
+
+    # Get source files from gdb
+    sources=$(gdb -q "$1" <<EOF
+info sources
+EOF
+)
+    sources=$(echo "$sources" | grep -Eo "/.*\.c(pp)?,?")
+    breakpoint=false
+    IFS=$'\n'
+    for f in ${sources//,/}
+    do
+        # Ensure executable is more recent than source and header files
+        if [ "$f" -nt "$1" ]; then
+            echo "Looks like you've changed your code. Recompile and then re-run debug50!"
+            exit 1
+        fi
+
+        # Check for breakpoints in current source file
+        if [ "$breakpoint" = false ]; then
+            if [ -z "$(c9 exec  breakpoint_set "$f")" ]; then
+                breakpoint=true
+            fi
+        fi
+    done
+
+    # Use default value for IFS
+    unset IFS
+
+    # No breakpoints found
+    if [ "$breakpoint" = false ]; then
+        echo "Looks like you haven't set any breakpoints. Set at least one breakpoint by clicking to the left of a line number and then re-run debug50!"
+        exit 1
+    fi
+
+    # SIGUSR1 signals to begin the shim
+    SHIM="/home/ubuntu/.c9/bin/c9gdbshim.js"
+    trap "node $SHIM --debug=1 $*; c9 exec stopDebugger $PID; echo; exit 0" SIGUSR1
+
+    # Give PID to proxy for monitoring
+    ERR=$(c9 exec startDebugger gdb $PID)
+elif [[ "$1" = *.py || $(head --lines=1 "$1") =~ ^#!.*python.*$ ]]; then
+    trap "python -m ikp3db --ikpdb-port=15473 --ikpdb-working-directory='$(pwd)' $*; c9 exec stopDebugger $PID; echo; exit 0" SIGUSR1
+
+    # Give PID to proxy for monitoring
+    ERR=$(c9 exec startDebugger ikp3db $PID)
+
+# Ensure file is executable and debuggable
+# http://stackoverflow.com/a/10319835/1797347
+# Script with .py extension or python shebang
+fi
+
+# c9 exec doesn't return non-zero on error!
+if [ "$ERR" = "Could not execute startDebugger" ]; then
+    echo "Unable to start!"
+    exit 1
+fi
+
+# Wait 5 minutes to start or quit this process
+DELAY=300
+while [ $DELAY -gt 0 ]; do sleep 1; DELAY=$((DELAY-1)); done

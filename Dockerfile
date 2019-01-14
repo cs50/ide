@@ -2,7 +2,7 @@ FROM cs50/cli
 
 # Image metadata
 LABEL maintainer="CS50 <sysadmins@cs50.harvard.edu>"
-LABEL version="0.0.1"
+LABEL version="0.2.0"
 LABEL description="CS50 IDE (Online) image."
 
 ARG DEBIAN_FRONTEND=noninteractive
@@ -30,10 +30,15 @@ COPY ./c9install /tmp/c9install
 RUN sudo chmod a+x /tmp/c9install && \
     sudo mkdir /opt/c9 && \
     sudo chown --recursive ubuntu:ubuntu /opt/c9 && \
-    /tmp/c9install
+    /tmp/c9install && \
+    sudo rm --force /tmp/c9install
+
+# Install c9 CLI
+RUN sudo npm install --global c9
 
 # Install Python packages
 RUN sudo --set-home pip3 install \
+        git+git://github.com/cmorisse/ikp3db.git \
         nltk \
         plotly \
         pylint \
@@ -49,6 +54,9 @@ RUN sudo groupadd --system courses
 RUN sudo adduser --gecos "CS50,,,," --ingroup courses --disabled-login --system cs50
 
 RUN echo | sudo tee /etc/motd
+
+COPY files/ /
+RUN sudo chmod 755 /opt/cs50/bin/*
 
 # Change default workdir
 WORKDIR /home/ubuntu
