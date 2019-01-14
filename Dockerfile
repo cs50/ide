@@ -20,6 +20,7 @@ RUN sudo apt-get update --quiet && \
         libphp-php-mailer \
         libxslt1-dev \
         openssh-server \
+        pgloader \
         php-cgi \
         php-curl \
         # phpliteadmin \
