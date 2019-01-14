@@ -16,7 +16,13 @@ RUN mkdir --parent /home/ubuntu/.ssh &&  \
 # Install apt packages
 RUN sudo apt-get update --quiet && \
     sudo apt-get install --yes \
+        # adminer50 \
+        libphp-php-mailer \
+        libxslt1-dev \
         openssh-server \
+        php-cgi \
+        php-curl \
+        # phpliteadmin \
         php-xdebug && \
     sudo mkdir /var/run/sshd `# required by openssh-server`
 
