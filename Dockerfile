@@ -17,7 +17,7 @@ RUN mkdir --parent /home/ubuntu/.ssh &&  \
 RUN sudo apt-get update --quiet && \
     sudo apt-get install --yes \
         # adminer50 \
-        libphp-php-mailer \
+        libphp-phpmailer \
         libxslt1-dev \
         openssh-server \
         pgloader \
