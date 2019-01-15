@@ -1,0 +1,143 @@
+#!/bin/bash
+
+# echos to stderr
+function echo_err() {
+    >&2 echo "$1"
+}
+
+function usage() {
+    echo_err "Usage: phpliteadmin [--url-only] FILENAME"
+    exit 1
+}
+
+# Usage
+if [[ $# -lt 1 || $# -gt 2 ]]; then
+    usage
+fi
+
+# Parse command-line args
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --url-only)
+            URL_ONLY=1
+            ;;
+        *)
+            DB_FILE="$1"
+            ;;
+    esac
+
+    shift
+done
+
+if [[ -z "$DB_FILE" ]]; then
+    usage
+elif [[ ! -f "$DB_FILE" ]]; then
+    echo_err "phpliteadmin: $DB_FILE: No such file"
+    exit 1
+fi
+if [[ ! -r "$DB_FILE" ]]; then
+    echo_err "phpliteadmin: $DB_FILE: Permission denied"
+    exit 1
+fi
+
+C9="c9 exec"
+
+PORT="8082"
+URL="$C9_HOSTNAME:$PORT"
+path=$(readlink -m "$DB_FILE")
+name=$(basename ${path%.*})
+
+# Generate password
+password=$(pwgen -s 16 1)
+
+# http://stackoverflow.com/q/4774054
+dir=$(dirname $(readlink -f "$0"))
+
+# Copy and configure phpLiteAdmin
+temp=$(mktemp -d)
+if [[ $? -ne 0 || -z "$temp" ]]; then
+    echo_err "Could not create a temporary directory"
+    exit 1
+fi
+cp "$dir/../share/phpliteadmin.css" "$temp/"
+cp "$dir/../share/phpliteadmin.php" "$temp/"
+sed -i "s/\$_POST\['login'\]/\$_REQUEST['login']/" "$temp/phpliteadmin.php"
+sed -i "s/\$_POST\['password'\]/\$_REQUEST['password']/" "$temp/phpliteadmin.php"
+sed -E -i "s/.*<input[^>]+name='remember'[^>]+>.*//" "$temp/phpliteadmin.php"
+sed -E -i "s/.*<input[^>]+name='logout'[^>]+>.*//" "$temp/phpliteadmin.php"
+cat > "$temp/phpliteadmin.config.php" <<EOF
+<?php
+
+    // only support one database
+    \$databases = [["name" => "$name", "path" => "$path"]];
+    \$directory = false;
+
+    // pseudorandom password
+    \$password = "$password";
+
+    // instead of /var/lib/php5, which is only writable by www-data
+    session_save_path(sys_get_temp_dir());
+
+    // disable garbage collection of session
+    ini_set("session.gc_probability", 0);
+
+    // pass PHPSESSID via URL
+    ini_set("session.use_cookies", "0");
+    ini_set("session.use_only_cookies", "0");
+    ini_set("session.use_trans_sid", "1");
+?>
+EOF
+cat > "$temp/index.php" <<EOF
+<?php
+
+    header("Location: phpliteadmin.php?login=true&password={\$_GET["password"]}");
+    exit();
+
+?>
+EOF
+
+# Check if already running
+pids=$(pgrep -x phpliteadmin)
+for p in $pids; do
+    if [ $p -ne $$ ]; then
+        kill -HUP $p &>/dev/null
+        while kill -0 $p &>/dev/null; do sleep 1; done;
+    fi
+done
+
+if curl -I http://localhost:$PORT > /dev/null 2>&1; then
+    echo_err "Could not start phpLiteAdmin."
+    exit 1
+fi
+
+# Serve copy
+php -S 0.0.0.0:$PORT -t "$temp" > /dev/null 2>&1 &
+pid=$!
+
+# Wait at most 3 seconds for server to be listening
+ticks=6
+while [ ! curl -I http://localhost:$PORT &> /dev/null -a $ticks ]; do
+    sleep .5;
+    ticks=$((ticks - 1))
+done
+
+if [ ! $ticks ]; then
+    echo_err "Timed out."
+    exit 1
+fi
+
+url="$URL/?password=$password"
+
+if [[ $URL_ONLY ]]; then
+    echo "$url"
+else
+    echo "Running phpLiteAdmin at $url"
+    echo -n "Exit with ctrl-c..."
+fi
+
+# Listen for ctrl-c
+# http://stackoverflow.com/a/5722850
+trap "{ kill -9 $pid &>/dev/null; rm -rf "$temp"; echo; }" EXIT
+
+# Wait for server to exit
+wait $pid &> /dev/null

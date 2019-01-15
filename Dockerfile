@@ -16,7 +16,6 @@ RUN mkdir --parent /home/ubuntu/.ssh &&  \
 # Install apt packages
 RUN sudo apt-get update --quiet && \
     sudo apt-get install --yes \
-        # adminer50 \
         expect \
         libphp-phpmailer \
         libxslt1-dev \
@@ -24,7 +23,7 @@ RUN sudo apt-get update --quiet && \
         pgloader \
         php-cgi \
         php-curl \
-        # phpliteadmin \
+        pwgen `# phpliteadmin dependency` \
         php-xdebug && \
     sudo mkdir /var/run/sshd `# required by openssh-server`
 
