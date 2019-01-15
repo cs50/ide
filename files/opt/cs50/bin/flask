@@ -48,10 +48,10 @@ if [[ "$1" == "run" ]]; then
 
     # Kill any process listing on the specified port
     # Regex to handle -pxxxx, -p xxxx, --port xxxx, --port=xxxx
-    fuser --kill "${port//[^0-9]}/tcp" &> /dev/null
+    fuser --kill -INT "${port//[^0-9]}/tcp" &> /dev/null
 
     # Spawn flask
-    script --flush --quiet --return /dev/null --command "FLASK_APP=\"$FLASK_APP\" FLASK_DEBUG=\"$FLASK_DEBUG\" /opt/pyenv/shims/flask run $host $port $reload $threads $options"
+    FLASK_APP=\"$FLASK_APP\" FLASK_DEBUG=\"$FLASK_DEBUG\" /opt/pyenv/shims/flask run $host $port $reload $threads $options
 else
     command flask "$@"
 fi
