@@ -23,6 +23,7 @@ RUN sudo apt-get update --quiet && \
         pgloader \
         php-cgi \
         php-curl \
+        php-sqlite3 `phpliteadmin dependency` \
         pwgen `# phpliteadmin dependency` \
         php-xdebug && \
     sudo mkdir /var/run/sshd `# required by openssh-server`
