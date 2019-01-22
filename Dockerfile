@@ -16,7 +16,6 @@ RUN mkdir --parent /home/ubuntu/.ssh &&  \
 # Install apt packages
 RUN sudo apt-get update --quiet && \
     sudo apt-get install --yes \
-        expect \
         libphp-phpmailer \
         libxslt1-dev \
         openssh-server \
