@@ -70,7 +70,7 @@ EOF
     # Give PID to proxy for monitoring
     ERR=$(c9 exec startDebugger gdb $PID)
 elif [[ "$1" = *.py || $(head --lines=1 "$1") =~ ^#!.*python.*$ ]]; then
-    trap "python3 -m ikp3db --ikpdb-port=15473 --ikpdb-working-directory='$(pwd)' $*; c9 exec stopDebugger $PID; echo; exit 0" SIGUSR1
+    trap "python3 -m ikp3db --ikpdb-port=15472 --ikpdb-working-directory='$(pwd)' $*; c9 exec stopDebugger $PID; echo; exit 0" SIGUSR1
 
     # Give PID to proxy for monitoring
     ERR=$(c9 exec startDebugger ikp3db $PID)

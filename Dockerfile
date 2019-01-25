@@ -19,6 +19,7 @@ RUN sudo apt-get update --quiet && \
         expect \
         libphp-phpmailer \
         libxslt1-dev \
+        netcat-openbsd \
         openssh-server \
         pgloader \
         php-cgi \
