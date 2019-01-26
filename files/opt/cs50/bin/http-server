@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Default options
 a="-a 0.0.0.0"
 c="-c-1"
@@ -7,7 +6,6 @@ cors="--cors"
 i="-i false"
 port="-p 8080"
 options="--no-dotfiles"
-
 # Override default options
 while test ${#} -gt 0
 do
@@ -37,11 +35,8 @@ do
         shift
     fi
 done
-
 # Kill any process listing on the specified port
-# Regex to handle -pxxxx, -p xxxx
-fuser --kill -INT "${port//[^0-9]}/tcp" &> /dev/null
-
-# Spawn http-server, retaining colorized output
-# Use expect's unbuffer to preserve colored output
-unbuffer /usr/bin/http-server $a $c $cors $i $port $options | sed "s#\(.*http://\)[^:]\+\(:.\+\)#\10.0.0.0\2#"
+# using regex to handle -pxxxx, -p xxxx, --port xxxx, --port=xxxx
+fuser --kill -INT "${port//[^0-9]}/tcp" &>/dev/null
+# Spawn http-server, retaining colorized output using expect's unbuffer
+unbuffer "$(npm prefix -g)/bin/http-server" $a $c $cors $i $port $options | unbuffer -p sed "s#\(.*http://\)[^:]\+\(:.\+\)#\1localhost\2#" | uniq
