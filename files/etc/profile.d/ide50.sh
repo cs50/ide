@@ -49,10 +49,8 @@ alias sudo="sudo "
 
 # flask
 export FLASK_APP="application.py"
-alias flask="/opt/cs50/bin/flask"
-
-# http-server
-alias http-server="/opt/cs50/bin/http-server"
+export FLASK_DEBUG="0"
+export FLASK_ENV="development"
 
 # valgrind defaults
 export VALGRIND_OPTS="--memcheck:leak-check=full --memcheck:track-origins=yes"
