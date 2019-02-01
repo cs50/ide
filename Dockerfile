@@ -2,7 +2,7 @@ FROM cs50/cli
 
 # Image metadata
 LABEL maintainer="CS50 <sysadmins@cs50.harvard.edu>"
-LABEL version="0.2.3"
+LABEL version="0.2.4"
 LABEL description="CS50 IDE (Online) image."
 
 ARG DEBIAN_FRONTEND=noninteractive
