@@ -44,7 +44,7 @@ RUN sudo npm install --global c9
 
 # Install Python packages
 RUN sudo --set-home pip3 install \
-        git+git://github.com/cmorisse/ikp3db.git \
+        git+git://github.com/cs50/ikp3db.git \
         nltk \
         plotly \
         pylint \
