@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# http://stackoverflow.com/a/246128
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# python -m py_compile helpers.py tweets
+# cd __pycache__/
+# mv helpers.cpython-34.pyc ../helpers.pyc
+# mv tweetscypthon-34.pyc ../tweets.pyc
+python3 "$DIR/tweets.pyc" "$@"

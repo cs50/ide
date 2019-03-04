@@ -1,0 +1,278 @@
+#!/usr/bin/env php
+<?php
+
+    // constants
+    define("VERSION", "1.0");
+    $TYPES = array(
+     "*.c",
+     "*.css",
+     "*.h",
+     "*.htm",
+     "*.html",
+     "*.js",
+     "*.php",
+     "Makefile"
+    );
+
+    // report all errors
+    error_reporting(E_ALL ^ E_DEPRECATED);
+    ini_set("display_errors", true);
+
+    // explain usage
+    if (in_array("-h", $argv) || in_array("--help", $argv))
+    {
+        echo "Usage: challenge /path/to/pset5\n";
+        exit(1);
+    }
+    else if (in_array("-v", $argv) || in_array("--version", $argv))
+    {
+        echo VERSION . "\n";
+        exit(1);
+    }
+
+    // ensure proper usage
+    if ($argc < 2)
+    {
+        echo "Usage: challenge /path/to/pset5\n";
+        exit(1);
+    }
+
+    // check for debugging mode
+    $verbose = in_array("-d", $argv) || in_array("-D", $argv);
+    $veryverbose = in_array("-D", $argv);
+
+    // check STDIN else command line for inputs
+    if ($argv[1] == "--")
+    {
+        echo "Taking inputs from STDIN, one per line...  Hit Ctrl-D when done else Ctrl-C to cancel.\n";
+        $patterns = file("php://stdin", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    }
+    else
+    {
+        $patterns = array();
+        for ($i = 1; $i < $argc; $i++)
+        {
+            if ($argv[$i][0] == "-")
+                break;
+            array_push($patterns, $argv[$i]);
+        }
+    }
+
+    // glob patterns lest shell (e.g., Windows) not have done so
+    $inputs = array();
+    foreach ($patterns as $pattern)
+    {
+        // search for paths that match pattern
+        $paths = glob($pattern, GLOB_BRACE);
+
+        // sort paths that match pattern
+        $inputs = array_merge($inputs, $paths);
+    }
+
+    // files to render
+    $files = array();
+
+    // directories into which to descend
+    $directories = array();
+
+    // parse command line for files and directories
+    foreach ($inputs as $input)
+    {
+        // ensure file (or directory) exists
+        if (!file_exists($input))
+            die("File does not exist: {$input}\n");
+
+        // ensure file (or directory) is readable
+        if (!is_readable($input))
+            die("File cannot be read: {$input}\n");
+
+        // push file or directory onto array
+        if (is_dir($input))
+            array_push($directories, $input);
+        else
+            array_push($files, $input);
+    }
+
+    // descend into directories
+    while (count($directories) > 0)
+    {
+        // pop directory
+        $directory = array_shift($directories);
+
+        // skip dotdirectories
+        if (substr(basename($directory), 0, 1) == ".")
+        {
+            if ($verbose)
+                echo "Skipping $directory (because it's hidden)...\n";
+            continue;
+        }
+
+        // sort directory's children
+        if (($children = @scandir($directory)) === false)
+        {
+            if ($verbose)
+                echo "Skipping $directory (because it's unreadable)...\n";
+            continue;
+        }
+
+        // iterate over directory's children
+        foreach ($children as $child)
+        {
+            // ignore . and ..
+            if ($child == "." || $child == "..")
+                continue;
+    
+            // prepare child's path
+            $path = rtrim($directory, "/") . DIRECTORY_SEPARATOR . $child;
+
+            // push child's path onto array
+            if (is_dir($path))
+                array_push($directories, $path);
+            else
+                array_push($files, $path);
+        }
+    }
+
+    // sort files
+    natcasesort($files);
+
+    // prepare to upload files
+    $uploads = array();
+
+    // determine which files to upload
+    foreach ($files as $file)
+    {
+        // skip dotfiles
+        if (substr(basename($file), 0, 1) == ".")
+        {
+            if ($verbose)
+                echo "Skipping $file (because it's hidden)...\n";
+            continue;
+        }
+
+        // skip binary files
+        if (strpos(file_get_contents($file), "\x00") !== false)
+        {
+            if ($verbose)
+                echo "Skipping $file (because it's binary)...\n";
+            continue;
+        }
+
+        // skip unsupported types
+        $supported = false;
+        foreach ($TYPES as $type)
+        {
+            // escape . as \.
+            $type = str_replace(".", "\.", $type);
+
+            // convert * to .+
+            $type = str_replace("*", ".+", $type);
+
+            if (preg_match("/^$type$/i", basename($file)))
+            {
+                $supported = true;
+                break;
+            }
+        }
+        if (!$supported)
+        {
+            if ($verbose)
+                echo "Skipping $file (because it's not a supported type)...\n";
+            continue;
+        }
+
+        // add file to uploads
+        array_push($uploads, $file);
+    }
+
+    // ensure files will be uploaded
+    if (count($uploads) == 0)
+        die("Nothing to check (because no files are checkable).\n");
+
+    // prepare ZIP
+    $zip = new ZipArchive();
+    $filename = tempnam(sys_get_temp_dir(), "check50-") . ".zip";
+    if ($zip->open($filename, ZIPARCHIVE::OVERWRITE) !== true)
+        die("Could not create ZIP file.\n");
+    foreach ($uploads as $upload)
+    {
+        // TEMP
+        if (preg_match("{(pset5/.+)$}", $upload, $matches))
+            $localname = $matches[1];
+        else
+            $localname = $upload;
+
+        // add file to ZIP
+        if ($zip->addFile($upload, $localname) !== true)
+            die("Could not add {$file} to ZIP file.\n");
+    }
+
+    // close ZIP
+    if ($zip->close() !== true)
+        die("Could not close ZIP file.\n");
+
+    // prepare fields
+    $fields = array();
+
+    // TEMP
+    $fields["course"] = "cs50";
+    $fields["FILE"] = "@{$filename}";
+    $fields["program"] = "speller";
+    $fields["school"] = "harvard.edu";
+    $fields["term"] = "fall";
+    $fields["year"] = "2014";
+    $fields["version"] = VERSION;
+
+    // POST fields
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 32);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $fields);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_URL, "https://board.cs50.net/");
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $response = curl_exec($ch);
+    $info = curl_getinfo($ch);
+
+    // delete ZIP
+    unlink($filename);
+
+    // check response
+    if ($info["http_code"] != 200)
+        die("CS50 Challenge returned an error.  Email sysadmins@cs50.net to inquire.\n");
+
+    // decode response
+    $o = json_decode($response);
+    if (is_null($o))
+        die("CS50 Challenge returned an error.  Email sysadmins@cs50.net to inquire.\n");
+
+    // check for URL
+    if (isset($o->url))
+    {
+        // operating system name
+        $uname = php_uname("s");
+
+        // Mac OS
+        if ($uname == "Darwin" && (boolean) getenv("DISPLAY"))
+            system("open " . escapeshellarg($o->url) . " > /dev/null 2>&1");
+
+        // Linux
+        else if ($uname == "Linux" && (boolean) getenv("DISPLAY"))
+            system("xdg-open " . escapeshellarg($o->url) . " > /dev/null 2>&1");
+
+        // Windows
+        else if ($uname == "Windows")
+            system("start " . escapeshellarg($o->url));
+    }
+
+    // display message, if any
+    if (isset($o->message))
+        echo "{$o->message}\n";
+
+    // that's all folks
+    exit(0);
+
+?>
+

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# http://stackoverflow.com/a/246128
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# python -m py_compile bleep.py
+# cd __pycache__/
+# mv bleep.cpython-36.pyc ../bleep.pyc
+python3 "$DIR/bleep.pyc" "$@"

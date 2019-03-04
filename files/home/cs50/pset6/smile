@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# http://stackoverflow.com/a/246128
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# python -m py_compile analyzer.py smile
+# cd __pycache__/
+# mv analyzer.cpython-34.pyc ../analyzer.pyc
+# mv smilecpython-34.pyc ../smile
+python3 "$DIR/smile.pyc" "$@"

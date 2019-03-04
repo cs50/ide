@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# http://stackoverflow.com/a/246128
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# python -m py_compile hello.py
+# cd __pycache__/
+# mv hello.cpython-36.pyc ../hello.pyc
+python3 "$DIR/hello.pyc" "$@"

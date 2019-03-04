@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# http://stackoverflow.com/a/246128
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# python -m py_compile mario.py
+# cd __pycache__/
+# mv mario.cpython-36.pyc ../mario.pyc
+python3 "$DIR/mario.pyc" "$@"

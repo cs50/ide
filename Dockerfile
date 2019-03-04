@@ -64,6 +64,11 @@ RUN echo | sudo tee /etc/motd
 COPY files/ /
 RUN sudo chmod 755 /opt/cs50/bin/*
 
+# Staff solutions
+RUN sudo chown --recursive cs50.courses /home/cs50 && \
+    sudo chmod --recursive 755 /home/cs50 && \
+    sudo find /home/cs50 -type f -name "*.*" -exec chmod 644 {} +;
+
 # Change default workdir
 WORKDIR /home/ubuntu
 
