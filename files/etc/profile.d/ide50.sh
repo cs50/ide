@@ -11,6 +11,7 @@ if [ "$(id -u)" != "0" ]; then
 
     # Protect user
     alias cp="cp -i"
+    alias ls="ls --color=auto"
     alias mv="mv -i"
     alias rm="rm -i"
 
