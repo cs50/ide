@@ -10,9 +10,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Expose port 22 for Cloud9 SSH environment connection
 EXPOSE 22
 
-RUN mkdir --parent /home/ubuntu/.ssh &&  \
-    echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC3enFD6CibqsRHazKUbxf1GMP6adwxI7F0x3r9PegNQbKg7eQCH2Nao6Ypuv3OvTvMIzlpsEcnunQh8pHq6A4uDyf6xCOOhTB3+Asv8LofVm8xzGYRTOfdxJCJCP6z5veHc52u2uNtsjRAEvMw5Uyvf/FAoPj7kSaYVBNSLOZo5tgoLaS2o9YzeOcc4c+ADdCTUKqpWuZ79WAGczTna8POIJsupDnxhL15uvk65QLzaSpOk17GNux8MCgfjRt8MN1yPWEhMvkpi5bSjXsmfed1pTkvtC2JH5YknhKIDXPTLLtNG+T0pndFIeFPLxsdbgAK9yHAFX6T3/h/S0hByiyuo+r/5iw4ap8VPkTXjtmPq+nZjhW4fx7eClLVGF8WYLtW1L5XJzPqV8VvUphvJD+8xffdq7JnGJsrHVOtrrd6jNmOOatBM9yhg+0KwsQC/6gk58T0T7b7ePEsWxTRo63GAwjtaqwijSz7f+sTHAnuAlgTdq4gyr0ulhuegzJLWogXgn7xXr2M8oEjAed3oEKfNJoNVoS6qh67uvoc9wQz2ApPDM2ZiIgy2qcIKPD+sIb2nz+yJYnnVMaw18OpswH7hq43XMfoA9WPAHdlKUrO/y1DFcpvWutBsbckm+WoCdkHIKgDw4af7AU29eCkcpPpzFVxqmJT/aNZ7boz6FlqHQ== kzidane+265111720517@cloud9.amazon.com" > /home/ubuntu/.ssh/authorized_keys 
-
 # Install apt packages
 RUN sudo apt-get update --quiet && \
     sudo apt-get install --yes \
