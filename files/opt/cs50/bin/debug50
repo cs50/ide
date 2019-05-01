@@ -24,7 +24,7 @@ fi
 
 # PID of current execution
 PID=$$
-if file "$1" | grep -qo "ELF 64-bit LSB executable"; then
+if file "$1" | grep -qo "ELF 64-bit LSB \(executable\|shared object\)"; then
     if ! [ "$(readelf -wL "$1")" ]; then
         echo "Can't debug this program! Are you sure you compiled it with -ggdb?"
         exit 1
