@@ -50,6 +50,7 @@ RUN sudo --set-home pip3 install \
         pylint \
         pylint_django \
         pylint_flask \
+        s3cmd \
         twython && \
     sudo python3 -m nltk.downloader -d /usr/share/nltk_data/ punkt
 
@@ -81,5 +82,4 @@ RUN rm --force --recursive /home/ubuntu/workspace/ && \
 # Change default workdir
 WORKDIR /home/ubuntu
 
-# Symlink .c9 files and start openssh daemon
-CMD sudo /usr/sbin/sshd -D -E /var/log/sshd.log
+CMD [ "/opt/cs50/bin/docker-cmd" ]
