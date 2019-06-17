@@ -37,7 +37,7 @@ if [[ "$1" == "run" ]]; then
     fuser --kill -INT "${port//[^0-9]}/tcp" &> /dev/null
 
     # Spawn flask
-    FLASK_APP="$FLASK_APP" FLASK_DEBUG="${FLASK_DEBUG:-0}" unbuffer /opt/pyenv/shims/flask run $host $port $reload $threads $options | sed "s#\(.*http://\)[^:]\+\(:.\+\)#\1localhost\2#"
+    FLASK_APP="$FLASK_APP" FLASK_DEBUG="${FLASK_DEBUG:-0}" unbuffer /opt/pyenv/shims/flask run $host $port $reload $threads $options | sed "s#\(.*\)http://[^:]\+\(:.\+\)#\1$(hostname50 --protocol)\2#"
 else
     /opt/pyenv/shims/flask "$@"
 fi

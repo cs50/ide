@@ -74,11 +74,6 @@ RUN sudo chown --recursive cs50.courses /home/cs50 && \
 RUN echo "AuthorizedKeysFile .ssh/authorized_keys /etc/cs50/ssh/authorized_keys" | sudo tee -a /etc/ssh/sshd_config && \
     sudo sed --in-place "s/#\(PasswordAuthentication\) yes/\1 no/" /etc/ssh/sshd_config
 
-RUN rm --force --recursive /home/ubuntu/workspace/ && \
-    mkdir --parent /home/ubuntu/.c9 && \
-    ln --symbolic --force /opt/c9/* /home/ubuntu/.c9 && \
-    sudo chown --recursive ubuntu:ubuntu /home/ubuntu
-
 # Change default workdir
 WORKDIR /home/ubuntu
 

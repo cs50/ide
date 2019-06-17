@@ -118,9 +118,9 @@ if [ ! $ticks ]; then
 fi
 
 if [[ $URL_ONLY ]]; then
-    echo "http://$C9_HOSTNAME:$PORT/?password=$password"
+    echo "$(hostname50 --protocol):$PORT/?password=$password"
 else
-    echo "Running phpLiteAdmin at http://0.0.0.0:$PORT/?password=$password"
+    echo "Running phpLiteAdmin at $(hostname50 --protocol):$PORT/?password=$password"
     echo -n "Exit with ctrl-c..."
 fi
 
