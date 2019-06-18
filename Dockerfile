@@ -22,7 +22,8 @@ RUN sudo apt-get update --quiet && \
         php-curl \
         php-sqlite3 `# phpliteadmin dependency` \
         pwgen `# phpliteadmin dependency` \
-        php-xdebug && \
+        php-xdebug \
+        rsync && \
     sudo mkdir /var/run/sshd `# required by openssh-server`
 
 # Install heroku CLI
