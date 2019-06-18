@@ -41,6 +41,9 @@ alias pylint="pylint3"
 alias python="python3"
 export PYTHONDONTWRITEBYTECODE="1"
 
+# update50
+alias update50="echo 'You are up-to-date!'"
+
 # sqlite3
 alias sqlite3="sqlite3 -column -header"
 
