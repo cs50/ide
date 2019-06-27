@@ -23,8 +23,9 @@ if [ "$(id -u)" != "0" ]; then
     alias fix50="printf '\x0f'"
 fi
 
-# Set maximum file size to 512MB
-ulimit -f 524288
+# Set maximum file size to 512MB (soft) and 1GB (hard) for migration
+ulimit -f 1048576
+ulimit -Sf 524288
 
 # Disable auto-logout
 export TMOUT="0"
