@@ -3,7 +3,6 @@
 set -ex
 
 sudo chown --recursive ubuntu:ubuntu /home/ubuntu && \
-    rm --force --recursive /home/ubuntu/workspace/ && \
     mkdir --parent /home/ubuntu/.c9 && \
     ln --symbolic --force /opt/c9/* /home/ubuntu/.c9
 
