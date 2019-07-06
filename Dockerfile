@@ -46,7 +46,6 @@ RUN sudo --set-home pip3 install \
         pylint \
         pylint_django \
         pylint_flask \
-        s3cmd \
         twython && \
     sudo python3 -m nltk.downloader -d /usr/share/nltk_data/ punkt
 
