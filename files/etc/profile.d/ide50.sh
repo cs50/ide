@@ -17,7 +17,3 @@ alias open="c9 open"
 
 # Set locale
 export LANG="C"
-
-# Short-circuit RVM's cd script
-# https://news.ycombinator.com/item?id=1637354
-export rvm_project_rvmrc="0"
