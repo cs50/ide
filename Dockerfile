@@ -24,9 +24,6 @@ RUN sudo apt-get update --quiet && \
         php-xdebug && \
     sudo mkdir /var/run/sshd `# required by openssh-server`
 
-# Install heroku CLI
-RUN curl https://cli-assets.heroku.com/install.sh | sh
-
 # Install ngrok client
 RUN wget --directory-prefix /tmp https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
     sudo unzip -d /usr/local/bin /tmp/ngrok-stable-linux-amd64.zip && \
