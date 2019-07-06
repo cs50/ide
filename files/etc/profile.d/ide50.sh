@@ -9,9 +9,6 @@ fi
 # Set maximum file size to 512MB
 ulimit -f 524288
 
-# Disable auto-logout
-export TMOUT="0"
-
 # c9 open
 alias open="c9 open"
 
