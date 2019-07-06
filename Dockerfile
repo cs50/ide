@@ -1,9 +1,8 @@
 FROM cs50/cli
+ARG DEBIAN_FRONTEND=noninteractive
 
 # Image metadata
 LABEL description="CS50 IDE (Online) image."
-
-ARG DEBIAN_FRONTEND=noninteractive
 
 # Expose port 22 for Cloud9 SSH environment connection
 EXPOSE 22
