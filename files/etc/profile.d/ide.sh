@@ -11,6 +11,3 @@ ulimit -f 524288
 
 # c9 open
 alias open="c9 open"
-
-# Set locale
-export LANG="C"
