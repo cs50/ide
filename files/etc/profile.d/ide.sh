@@ -7,7 +7,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # Set maximum file size to 512MB
-ulimit -f 524288
+ulimit -Sf 524288
 
 # c9 open
 alias open="c9 open"
