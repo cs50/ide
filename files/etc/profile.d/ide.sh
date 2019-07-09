@@ -11,3 +11,7 @@ ulimit -Sf 524288
 
 # c9 open
 alias open="c9 open"
+
+if [ -z "$CS50_IDE_TYPE" ]; then
+    export CS50_IDE_TYPE="online"
+fi
