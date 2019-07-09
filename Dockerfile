@@ -1,10 +1,8 @@
 FROM cs50/cli
+ARG DEBIAN_FRONTEND=noninteractive
 
 # Image metadata
-LABEL maintainer="CS50 <sysadmins@cs50.harvard.edu>"
 LABEL description="CS50 IDE (Online) image."
-
-ARG DEBIAN_FRONTEND=noninteractive
 
 # Expose port 22 for Cloud9 SSH environment connection
 EXPOSE 22
@@ -25,9 +23,6 @@ RUN sudo apt-get update --quiet && \
         php-xdebug \
         rsync && \
     sudo mkdir /var/run/sshd `# required by openssh-server`
-
-# Install heroku CLI
-RUN curl https://cli-assets.heroku.com/install.sh | sh
 
 # Install ngrok client
 RUN wget --directory-prefix /tmp https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
@@ -51,7 +46,6 @@ RUN sudo --set-home pip3 install \
         pylint \
         pylint_django \
         pylint_flask \
-        s3cmd \
         twython && \
     sudo python3 -m nltk.downloader -d /usr/share/nltk_data/ punkt
 
