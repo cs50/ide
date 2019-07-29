@@ -15,3 +15,10 @@ alias open="c9 open"
 if [ -z "$CS50_IDE_TYPE" ]; then
     export CS50_IDE_TYPE="online"
 fi
+
+# Flask
+export FLASK_APP="application.py"
+export FLASK_DEBUG="0"
+export FLASK_ENV="development"
+
+export APPLICATION_ENV="dev"
