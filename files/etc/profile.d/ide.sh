@@ -45,3 +45,6 @@ export PYTHONDONTWRITEBYTECODE="1"
 # Ruby
 export GEM_HOME="$HOME"/.gem
 export PATH="$GEM_HOME"/bin:"$PATH"
+
+# check50
+export CHECK50_WORKERS=1
