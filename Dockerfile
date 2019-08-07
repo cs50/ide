@@ -24,11 +24,6 @@ RUN sudo apt-get update --quiet && \
         rsync && \
     sudo mkdir /var/run/sshd `# required by openssh-server`
 
-# Install ngrok client
-RUN wget --directory-prefix /tmp https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip && \
-    sudo unzip -d /usr/local/bin /tmp/ngrok-stable-linux-amd64.zip && \
-    sudo chmod a+x /usr/local/bin/ngrok
-
 # Download and install Cloud9 SSH installer
 RUN sudo mkdir /opt/c9 && \
     sudo chown --recursive ubuntu:ubuntu /opt/c9 && \
