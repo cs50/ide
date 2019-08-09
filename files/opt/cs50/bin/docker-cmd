@@ -21,7 +21,7 @@ C9_CONTENTS=$(find "$C9_FOLDER" -type d -mindepth 1 -maxdepth 1)
 for e in $C9_CONTENTS; do
     e_="${e#$C9_FOLDER/}"
     echo "removing $USER_C9_FOLDER/$e_..."
-    rm --force --recursive "$e_"
+    rm --force --recursive "$USER_C9_FOLDER/$e_"
 done
 
 echo "symlinking $USER_C9_FOLDER to $C9_FOLDER/*..."
