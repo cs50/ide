@@ -25,7 +25,7 @@ for e in $C9_CONTENTS; do
 done
 
 echo "symlinking $USER_C9_FOLDER to $C9_FOLDER/*..."
-ln --force --symbolic "$C9_FOLDER/*" "$USER_C9_FOLDER"
+ln --force --symbolic "$C9_FOLDER"/* "$USER_C9_FOLDER"
 
 echo "starting ssh..."
 sudo /usr/sbin/sshd -D
