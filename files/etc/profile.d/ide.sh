@@ -48,3 +48,8 @@ export PATH="$GEM_HOME"/bin:"$PATH"
 
 # check50
 export CHECK50_WORKERS=1
+
+# Prevent Ctrl-S from freezing terminal in interactive mode
+case $- in
+    *i*) stty -ixon ;;
+esac
