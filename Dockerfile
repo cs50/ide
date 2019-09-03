@@ -10,6 +10,7 @@ EXPOSE 22
 # Install apt packages
 RUN sudo apt-get update --quiet && \
     sudo apt-get install --yes \
+        libncurses-dev \
         libphp-phpmailer \
         libxslt1-dev \
         netcat-openbsd \
