@@ -35,7 +35,8 @@ if file "$1" | grep -qo "ELF 64-bit LSB \(executable\|shared object\)"; then
 info sources
 EOF
 )
-    sources=$(echo "$sources" | grep -Eo "/.*\.c(pp)?,?")
+
+    sources=$(echo "$sources" | grep -Eo "/home/ubuntu.*\.c(pp)?,?")
     breakpoint=false
     IFS=$'\n'
     for f in ${sources//,/}
