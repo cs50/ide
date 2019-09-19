@@ -32,7 +32,7 @@ RUN sudo mkdir /opt/c9 && \
         sed 's#^\(C9_DIR=\).*#\1/opt/c9#' | bash
 
 # Install c9 CLI
-RUN sudo npm install --global c9
+RUN sudo npm install --global c9 gdb-mi-parser
 
 # Install Python packages
 RUN sudo --set-home pip3 install \

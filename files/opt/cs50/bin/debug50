@@ -31,15 +31,30 @@ if file "$1" | grep -qo "ELF 64-bit LSB \(executable\|shared object\)"; then
     fi
 
     # Get source files from gdb
-    sources=$(gdb -q "$1" <<EOF
-info sources
-EOF
-)
+    sources=$(node -e "\
+const { spawn } = require('child_process'); \
+const parser = require('/usr/lib/node_modules/gdb-mi-parser'); \
+const gdb = spawn('gdb', ['-q', '--interpreter=mi2', process.argv[1]]); \
+gdb.stdout.on('data', function handleGDBOutput(data) { \
+  output = parser(data.toString()); \
+  if (!output.resultRecord || !output.resultRecord.result || !output.resultRecord.result.files) { \
+    return; \
+  } \
+  const files = output.resultRecord.result.files; \
+  console.log( \
+    files.filter((f) => f.fullname.startsWith('/home/ubuntu')) \
+    .map((f) => f.fullname) \
+    .join('\n') \
+  ); \
+  gdb.stdout.off('data', handleGDBOutput); \
+  gdb.stdin.write('-gdb-exit\n'); \
+}); \
+gdb.stdin.write('-file-list-exec-source-files\n'); \
+" "$1")
 
-    sources=$(echo "$sources" | grep -Eo "/home/ubuntu.*\.c(pp)?,?")
     breakpoint=false
     IFS=$'\n'
-    for f in ${sources//,/}
+    for f in $sources;
     do
         # Ensure executable is more recent than source and header files
         if [ "$f" -nt "$1" ]; then
