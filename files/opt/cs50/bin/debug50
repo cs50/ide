@@ -90,10 +90,9 @@ elif [[ "$1" = *.py || $(head --lines=1 "$1") =~ ^#!.*python.*$ ]]; then
 
     # Give PID to proxy for monitoring
     ERR=$(c9 exec startDebugger ikp3db $PID)
-
-# Ensure file is executable and debuggable
-# http://stackoverflow.com/a/10319835/1797347
-# Script with .py extension or python shebang
+else
+    echo "Can't debug this program! Are you sure you're running debug50 on an executable or a Python script?"
+    exit 1
 fi
 
 # c9 exec doesn't return non-zero on error!
