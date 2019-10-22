@@ -90,6 +90,11 @@ gdb.stdin.write('-file-list-exec-source-files\n'); \
     # Give PID to proxy for monitoring
     ERR=$(c9 exec startDebugger gdb $PID)
 elif [[ "$1" = *.py || $(head --lines=1 "$1") =~ ^#!.*python.*$ ]]; then
+    if [ -n "$(c9 exec  breakpoint_set "$(realpath $1)")" ]; then
+        echo "Looks like you haven't set any breakpoints. Set at least one breakpoint by clicking to the left of a line number and then re-run debug50!"
+        exit 1
+    fi
+
     trap "python3 -m ikp3db --ikpdb-log-file=/home/ubuntu/.ikp3db --ikpdb-log-nocolor --ikpdb-port=15472 --ikpdb-client-working-directory='$(pwd)' $*; c9 exec stopDebugger $PID; echo; exit 0" SIGUSR1
 
     # Give PID to proxy for monitoring
