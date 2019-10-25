@@ -1,9 +1,3 @@
 #!/bin/bash
-
-# http://stackoverflow.com/a/246128
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-# python -m py_compile compare.py
-# cd __pycache__/
-# mv compare.cpython-36.pyc ../compare.pyc
 python3 "$DIR/compare.pyc" "$@"

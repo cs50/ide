@@ -31,8 +31,10 @@ RUN sudo mkdir /opt/c9 && \
     curl --silent --location https://raw.githubusercontent.com/c9/install/master/install.sh | \
         sed 's#^\(C9_DIR=\).*#\1/opt/c9#' | bash
 
-# Install c9 CLI
-RUN sudo npm install --global c9 gdb-mi-parser
+# Install npm packages
+# Change ownership of ~/.config
+RUN sudo npm install --global c9 gdb-mi-parser && \
+    sudo chown --recursive ubuntu:ubuntu /home/ubuntu/.config
 
 # Install Python packages
 RUN sudo --set-home pip3 install \
