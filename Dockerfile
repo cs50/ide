@@ -28,6 +28,10 @@ RUN sudo apt-get update --quiet && \
         xvfb && \
     sudo mkdir /var/run/sshd `# required by openssh-server`
 
+# Install noVNC
+RUN sudo git clone --depth=1 https://github.com/noVNC/noVNC.git /opt/noVNC && \
+    sudo chown -R ubuntu:ubuntu /opt/noVNC
+
 # Download and install Cloud9 SSH installer
 RUN sudo mkdir /opt/c9 && \
     sudo chown --recursive ubuntu:ubuntu /opt/c9 && \
