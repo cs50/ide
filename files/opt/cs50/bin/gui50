@@ -1,0 +1,46 @@
+#!/bin/bash
+
+set -e
+
+trap "pkill -P $$ &>/dev/null" ERR EXIT SIGINT SIGHUP
+
+# Create virtual screen
+DISPLAY="${DISPLAY:=:0}"
+Xvfb "$DISPLAY" -screen 0 1280x720x16 -br &>> /tmp/xvfb.log &
+
+# Start VNC server
+X11VNC_PASSWORD="$(pwgen -s 16 1)"
+x11vnc -cursor arrow -display "$DISPLAY" -forever -noxfixes -noxrecord -noxdamage -passwd "$X11VNC_PASSWORD" -xkb &>> /tmp/x11vnc.log &
+
+# Wait until VNC server is listening
+retries=5
+until sudo netstat -tulpn | grep -q 5900 || [[ $retries -eq 0 ]]; do
+    sleep 1
+    retries=$(( retries - 1 ))
+done
+
+if [[ $retries -eq 0 ]]; then
+    >&2 echo "Timed out before x11vnc was listening on port 5900"
+    exit 1
+fi
+
+# Start VNC client
+NOVNC_PORT=8082
+/opt/noVNC/utils/launch.sh --listen $NOVNC_PORT &>>/tmp/noVNC.log &
+
+URL="$(hostname50 --protocol):$NOVNC_PORT/vnc.html?autoconnect=true&host=$(hostname50)&port=$NOVNC_PORT&password=$X11VNC_PASSWORD"
+retries=5
+until curl -fLs  "http://localhost:$NOVNC_PORT" &>/dev/null || [[ $retries -eq 0 ]]; do
+    sleep 1
+    retries=$(( retries - 1 ))
+done
+
+if [[ $retries -eq 0 ]]; then
+    >&2 echo "Timed out before noVNC was listening on port $NOVNC_PORT"
+    exit 2
+fi
+
+echo "$URL"
+
+# Block until a child process exits
+wait -n $XVFB_PID $X11VNC_PID $NOVNC_PID &>/dev/null
