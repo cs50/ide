@@ -16,6 +16,8 @@ if [ -z "$CS50_IDE_TYPE" ]; then
     export CS50_IDE_TYPE="online"
 fi
 
+export DISPLAY=":0"
+
 # Editor
 export EDITOR="nano"
 

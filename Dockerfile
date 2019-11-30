@@ -14,6 +14,7 @@ RUN sudo apt-get update --quiet && \
         libphp-phpmailer \
         libxslt1-dev \
         netcat-openbsd \
+        net-tools \
         openssh-server \
         pgloader \
         postgresql \
@@ -22,8 +23,14 @@ RUN sudo apt-get update --quiet && \
         php-sqlite3 `# phpliteadmin dependency` \
         pwgen `# phpliteadmin dependency` \
         php-xdebug \
-        rsync && \
+        rsync \
+        x11vnc \
+        xvfb && \
     sudo mkdir /var/run/sshd `# required by openssh-server`
+
+# Install noVNC
+RUN sudo git clone --depth=1 https://github.com/noVNC/noVNC.git /opt/noVNC && \
+    sudo chown -R ubuntu:ubuntu /opt/noVNC
 
 # Download and install Cloud9 SSH installer
 RUN sudo mkdir /opt/c9 && \
@@ -70,4 +77,4 @@ RUN echo "AuthorizedKeysFile .ssh/authorized_keys /etc/cs50/ssh/authorized_keys"
 # Change default workdir
 WORKDIR /home/ubuntu
 
-CMD [ "/opt/cs50/bin/docker-cmd" ]
+CMD [ "/docker-entrypoint.sh" ]
