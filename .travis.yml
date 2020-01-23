@@ -1,0 +1,26 @@
+sudo: required
+services: docker
+branches:
+  except: "/^\\d+$/"
+script: |
+  export TRAVIS_TAG=$(( $(git tag --list --sort=creatordate | tail -n1) + 1 ))
+  docker build . -t "$TRAVIS_REPO_SLUG:$TRAVIS_TAG"
+before_deploy:
+- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+- docker tag "$TRAVIS_REPO_SLUG:$TRAVIS_TAG" "$TRAVIS_REPO_SLUG:latest"
+- git config --local user.name "bot50"
+- git config --local user.email "bot@cs50.harvard.edu"
+deploy:
+- provider: script
+  script: docker push "$TRAVIS_REPO_SLUG:$TRAVIS_TAG" && docker push "$TRAVIS_REPO_SLUG:latest"
+  skip_cleanup: true
+  on:
+    branch: master
+- provider: releases
+  api_key: "$GITHUB_TOKEN"
+  skip_cleanup: true
+  on:
+    branch: master
+notifications:
+  slack:
+    secure: drq8Lntep9Ft8jJLDePh3BbZ5gXj4ZU5UjHeRc9tfH5LYSlqRBWkGcaWO5y5u3S/W/Zqo6ibjRmJTRR8zHWHGEhBGQNKnmkIDS5TfRffmOAPlOd31zSEy3BezOp2szQpPe27K/fSptWZPl3Jt07QdxBdHkWX7XqaPi+5Bbyrta9AZtkfmWmKq3Y7KhyKD+nUIg3JjOA3ixvd3pbxlUOJ4vU/LiCRu7ZaKMifVxkOmb1u7Va9UeAzQYmXeHEqH2wwWAx5rNlkB63jsZU795nCDXYMSQNAkX0G4anvy3eVonyYdXOfurm3u0GJQzGQVIlOB8Z6j34z547PbrFG8abyV3qtGAZ+mTFn2X39Mg5+ZrzgcnaV88Hh4HcCnW8Vocb0akYTG1dfSXxeKARwLK2d1cXXm5jsxp/7uTsHs6oK9iu9/1o4xXPaMp6DE9uxXjMenwWF02rYlh69GgMSiwmA6pF3JyHUS3VYxvSKZpAaaOWPthvwvZptfnQPua/LtZn8tnqNtQVSxleD1r8TUsOVT/hksnzZJaBOU3OxDO7jKJqFBZeeZmEjqH5XYK40mzGmgrPG48sJ7IZ9L4s9s1z5ljHEtjGiFZ3zA+rxe+1JUU8jabCqXleF9mO71X/Hr/gdLSmHR/KuCnzHdUNrTpBMHOQL2dh+2QHQOLX1jrsWONk=
