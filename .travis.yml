@@ -3,16 +3,17 @@ services: docker
 branches:
   except: "/^\\d+$/"
 script: |
+  REPO_SLUG="${TRAVIS_REPO_SLUG%-*}"
   export TRAVIS_TAG=$(( $(git tag --list --sort=creatordate | tail -n1) + 1 ))
-  docker build . -t "$TRAVIS_REPO_SLUG:$TRAVIS_TAG"
+  docker build . -t "$REPO_SLUG:$TRAVIS_TAG"
 before_deploy:
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-- docker tag "$TRAVIS_REPO_SLUG:$TRAVIS_TAG" "$TRAVIS_REPO_SLUG:latest"
+- docker tag "$REPO_SLUG:$TRAVIS_TAG" "$REPO_SLUG:latest"
 - git config --local user.name "bot50"
 - git config --local user.email "bot@cs50.harvard.edu"
 deploy:
 - provider: script
-  script: docker push "$TRAVIS_REPO_SLUG:$TRAVIS_TAG" && docker push "$TRAVIS_REPO_SLUG:latest"
+  script: docker push "$REPO_SLUG:$TRAVIS_TAG" && docker push "$REPO_SLUG:latest"
   skip_cleanup: true
   on:
     branch: master
