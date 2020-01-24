@@ -71,7 +71,7 @@ RUN chown --recursive cs50.courses /home/cs50 && \
     find /home/cs50 -type f -name "*.*" -exec chmod 644 {} +;
 
 # Configure ssh
-RUN echo "AuthorizedKeysFile .ssh/authorized_keys /etc/cs50/ssh/authorized_keys" | tee -a /etc/ssh/sshd_config && \
+RUN echo "AuthorizedKeysFile .ssh/authorized_keys /cs50/ssh/authorized_keys" | tee -a /etc/ssh/sshd_config && \
     sed --in-place "s/#\(PasswordAuthentication\) yes/\1 no/" /etc/ssh/sshd_config
 
 USER ubuntu
