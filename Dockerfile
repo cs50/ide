@@ -26,9 +26,13 @@ RUN apt-get update --quiet && \
         pwgen `# phpliteadmin dependency` \
         php-xdebug \
         rsync \
+        rsyslog \
         x11vnc \
         xvfb && \
     mkdir /var/run/sshd `# required by openssh-server`
+
+# Disable kernel log, container doesn't have read permission
+RUN sed --in-place 's/\(module(load="imklog" permitnonkernelfacility="on")\)/# \1/' /etc/rsyslog.conf
 
 # Install noVNC
 RUN git clone --depth=1 https://github.com/noVNC/noVNC.git /opt/noVNC && \

@@ -27,5 +27,8 @@ done
 echo "symlinking $USER_C9_FOLDER to $C9_FOLDER/*..."
 ln --force --symbolic "$C9_FOLDER"/* "$USER_C9_FOLDER"
 
+echo "starting rsyslog..."
+sudo service rsyslog start
+
 echo "starting ssh..."
 sudo /usr/sbin/sshd -D
