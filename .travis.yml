@@ -4,7 +4,7 @@ branches:
   except: "/^\\d+$/"
 script: |
   REPO_SLUG="${TRAVIS_REPO_SLUG%-*}"
-  export TRAVIS_TAG=$(( $(git tag --list --sort=creatordate | tail -n1) + 1 ))
+  export TRAVIS_TAG=$(( $(git tag --list --sort=version:refname | tail -n1) + 1 ))
   docker build . -t "$REPO_SLUG:$TRAVIS_TAG"
 before_deploy:
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
