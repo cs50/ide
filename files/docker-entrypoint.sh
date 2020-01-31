@@ -31,4 +31,4 @@ echo "starting rsyslog..."
 sudo service rsyslog start
 
 echo "starting ssh..."
-sudo /usr/sbin/sshd -D
+sudo /usr/sbin/sshd -eD
