@@ -1,12 +1,6 @@
 FROM cs50/cli
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Image metadata
-LABEL description="CS50 IDE (Online) image."
-
-# Expose port 22 for Cloud9 SSH environment connection
-EXPOSE 22
-
 USER root
 
 # Install apt packages
@@ -17,7 +11,6 @@ RUN apt-get update --quiet && \
         libxslt1-dev \
         netcat-openbsd \
         net-tools \
-        openssh-server \
         pgloader \
         postgresql \
         php-cgi \
@@ -28,8 +21,7 @@ RUN apt-get update --quiet && \
         rsync \
         rsyslog \
         x11vnc \
-        xvfb && \
-    mkdir /var/run/sshd `# required by openssh-server`
+        xvfb
 
 # Disable kernel log, container doesn't have read permission
 RUN sed --in-place 's/\(module(load="imklog" permitnonkernelfacility="on")\)/# \1/' /etc/rsyslog.conf
@@ -37,12 +29,6 @@ RUN sed --in-place 's/\(module(load="imklog" permitnonkernelfacility="on")\)/# \
 # Install noVNC
 RUN git clone --depth=1 https://github.com/noVNC/noVNC.git /opt/noVNC && \
     chown -R ubuntu:ubuntu /opt/noVNC
-
-# Download and install Cloud9 SSH installer
-RUN mkdir /opt/c9 && \
-    curl --silent --location https://raw.githubusercontent.com/c9/install/master/install.sh | \
-        sed 's#^\(C9_DIR=\).*#\1/opt/c9#' | bash && \
-    chown --recursive ubuntu:ubuntu /opt/c9
 
 # Install npm packages
 RUN npm install --global c9 gdb-mi-parser
@@ -74,15 +60,21 @@ RUN chown --recursive cs50.courses /home/cs50 && \
     chmod --recursive 755 /home/cs50 && \
     find /home/cs50 -type f -name "*.*" -exec chmod 644 {} +;
 
-# Configure ssh
-RUN echo "AuthorizedKeysFile .ssh/authorized_keys /cs50/ssh/authorized_keys" | tee -a /etc/ssh/sshd_config && \
-    sed --in-place "s/#\(PasswordAuthentication\) yes/\1 no/" /etc/ssh/sshd_config
+COPY --chown=ubuntu:ubuntu c9 /opt/c9
 
 USER ubuntu
 
-# Change default workdir
-WORKDIR /home/ubuntu
+# Install, build, and compress Cloud9
+WORKDIR /opt/c9
+RUN ./install-script.sh
+RUN npm install
+RUN npm run build && mv packages/ide/cdn/* packages/cs50/cdn
+RUN rm -rf .git && \
+    cd packages/cs50 && \
+    node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"
 
-LABEL version="3"
+# Change default workdir
+RUN mkdir -p /home/ubuntu/workspace
+WORKDIR /home/ubuntu/workspace
 
 CMD [ "/docker-entrypoint.sh" ]
