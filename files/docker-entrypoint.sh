@@ -18,4 +18,4 @@ done
 
 ln --force --symbolic "$C9_DEPENDS_DIR"/* "$C9_DIR"
 
-"$C9_DIR/node/bin/node" /opt/c9/server.js --workspacetype=cs50 -w "$HOME" --auth : --collab --listen 0.0.0.0 --port 5050
+"$C9_DIR/node/bin/node" /opt/c9/server.js --workspacetype=cs50 -w "$HOME" --auth "$USER:$C9_AUTH" --collab --listen 0.0.0.0 --port 5050
