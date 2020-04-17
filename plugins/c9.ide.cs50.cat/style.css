@@ -1,0 +1,12 @@
+.cs50-cat {
+    background-color: inherit !important;
+    background-image: url("@{image-path}/cat.png");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 55px 32px;
+    box-shadow: inherit;
+    color: inherit;
+    display: inline-block !important;
+    margin-right: 4px;
+    width: 55px;
+}

@@ -1,0 +1,19 @@
+{
+  "name": "c9.ide.cs50.browser",
+  "description": "",
+  "author": "CS50",
+  "contributors": [
+    {
+      "name": "Kareem Zidane",
+      "email": "kzidane@cs50.harvard.edu"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cs50/c9.ide.cs50.browser"
+  },
+  "plugins": {
+    "browser": {}
+  },
+  "licenses": []
+}

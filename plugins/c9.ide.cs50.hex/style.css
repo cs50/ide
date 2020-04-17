@@ -1,0 +1,38 @@
+/* config bar at the top */
+.cs50-hex-configs {
+    box-sizing: border-box;
+    padding: 5px;
+}
+.cs50-hex-configs:not(.dark) {
+    /* no need to handle dark (set correctly by default) */
+    background-color: #f1f1f1;
+}
+.cs50-hex-configs.dark .spinner {
+    background-color: #181818;
+}
+
+/* hex content textarea */
+.cs50-hex-content {
+    background-color: #fbfbfb;
+    font-family: monospace !important;
+}
+.cs50-hex-content.dark, .cs50-hex-content.dark:hover {
+    background-color: #181818;
+}
+
+/* vertical divider in the toolbar */
+.cs50-hex-divider {
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+}
+
+/* loading indicator */
+.cs50-hex-loading {
+    background-image: url("@{image-path}/loading.gif");
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 32px;
+}
+.cs50-hex-loading.dark {
+    background-image: url("@{image-path}/loading-dark.gif");
+}

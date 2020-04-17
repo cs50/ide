@@ -1,0 +1,19 @@
+{
+  "name": "c9.ide.cs50.debug",
+  "description": "Start Cloud9's GUI debugger from the command line.",
+  "version": "0.1",
+  "author": "Dan Armendariz",
+  "contributors": [
+    { "name": "Hary Anbarasu" },
+    { "name": "Kareem Zidane" }
+  ],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "plugins": {
+    "debug": {}
+  },
+  "categories": ["debugging"],
+  "licenses": []
+}

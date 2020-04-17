@@ -1,0 +1,105 @@
+/* Preload images */
+body:after {
+    content: url("@{image-path}/c9.png") url("@{image-path}/tree-toggle.png") url("@{image-path}/tree-toggle-active.png") url("@{image-path}/tree-toggle-dark.png") url("@{image-path}/tree-toggle-dark-active.png");
+    display:none;
+}
+
+div.panel-bar.environment_files.top-margin {
+    left: 0 !important;
+    top: 0 !important;
+}
+
+.cs50-simple-tree-toggle {
+    background-image: url("@{image-path}/tree-toggle.png");
+    background-size: auto 11px;
+    background-repeat: no-repeat;
+    left: 15px;
+    top: 12px;
+    z-index: 100;
+}
+.cs50-simple-tree-toggle:hover {
+    filter: brightness(0.5);
+    -webkit-filter: brightness(0.5);
+}
+.cs50-simple-tree-toggle.active {
+    background-image: url("@{image-path}/tree-toggle-active.png");
+}
+
+.cs50-simple-tree-toggle.dark {
+    background-image: url("@{image-path}/tree-toggle-dark.png");
+}
+.cs50-simple-tree-toggle.dark:hover {
+    filter: brightness(1.5);
+    -webkit-filter:brightness(1.5);
+}
+.cs50-simple-tree-toggle.dark.active {
+    background-image: url("@{image-path}/tree-toggle-dark-active.png");
+}
+
+.cs50-simple-pane0 .tabmenubtn {
+    left: 40px !important;
+}
+
+.cs50-simple-imgeditor-bar {
+    height: 39px !important;
+    text-align: center;
+}
+
+.cs50-simple-zoom-button {
+    background-color: #f2f2f1;
+    background-image: initial !important;
+    border: 1px solid #767676;
+    color: #767676 !important;
+    font-size: 24px !important;
+    width: 36px;
+}
+
+.cs50-simple-zoom-button:hover {
+    background-image: initial;
+    border-color: #363636;
+    color: #363636 !important;
+}
+
+.cs50-simple-zoom-button .caption {
+    padding: 5px !important;
+}
+
+.cs50-simple-zoom-button.dark {
+    background-color: #262626;
+    border-color: #c2c2c2;
+    color: #c2c2c2 !important;
+}
+
+.cs50-simple-zoom-button.dark:hover {
+    border-color: #ffffff;
+    color: #ffffff !important;
+}
+
+.cs50-save-warning {
+    background-color: red;
+    color: white;
+    font-size: 14px;
+    padding: 10px;
+}
+.cs50-save-warning code {
+    font-style: monospace;
+    font-weight: bold;
+}
+
+.has_apf .session_btn.changed strong:not(:hover) {
+  background-position: -9px 0px !important;
+}
+
+.c9-logo .icon {
+    background-image: url("@{image-path}/c9.png") !important;
+}
+
+/* Hide extra info after folder name in file tree */
+.projectRoot .extrainfo {
+    display: none;
+}
+
+/* Hide share button */
+.c9-share:not(.cs50-share) {
+    display: none;
+}

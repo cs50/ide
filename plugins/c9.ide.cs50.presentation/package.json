@@ -1,0 +1,13 @@
+{
+  "author": "CS50",
+  "contributors": [
+    {
+      "name": "Kareem Zidane"
+    }
+  ],
+  "description": "Adds a menu item to CS50 IDE that toggles presentation mode on or off.",
+  "name": "c9.ide.cs50.presentation",
+  "plugins": {
+    "presentation": {}
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "author": "CS50",
+  "description": "Adds a cat to CS50 IDE.",
+  "contributors": [
+    {
+      "email": "malan@harvard.edu",
+      "name": "David J. Malan"
+    }
+  ],
+  "name": "c9.ide.cs50.cat",
+  "plugins": {
+    "cat": {}
+  }
+}

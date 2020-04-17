@@ -5,4 +5,4 @@ set -e
 echo "starting rsyslog..."
 sudo service rsyslog start
 
-cd /opt/c9/packages/cs50 && npm run standalone
+node /opt/c9/server.js --workspacetype=cs50 -w /home/ubuntu --auth : --collab --listen 0.0.0.0 --port 5050

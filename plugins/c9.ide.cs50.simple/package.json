@@ -1,0 +1,30 @@
+{
+  "author": "CS50",
+  "contributors": [
+    {
+      "name": "Nicholas Joseph"
+    },
+    {
+      "name": "Dan Bradley"
+    },
+    {
+      "email": "danallan@cs.harvard.edu",
+      "name": "Dan Armendariz"
+    },
+    {
+      "name": "Dino Rodriguez"
+    },
+    {
+      "name": "Annaleah Ernst"
+    },
+    {
+      "email": "malan@harvard.edu",
+      "name": "David J. Malan"
+    }
+  ],
+  "description": "Simplifies the CS50 IDE",
+  "name": "c9.ide.cs50.simple",
+  "plugins": {
+    "simple": {}
+  }
+}

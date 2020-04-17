@@ -1,0 +1,15 @@
+{
+  "author": "CS50",
+  "contributors": [
+    {
+      "email": "kzidane@cs50.harvard.edu",
+      "name": "Kareem Zidane"
+    }
+  ],
+  "description": "Hex viewer for the CS50 IDE",
+  "name": "c9.ide.cs50.hex",
+  "plugins": {
+    "hex": {},
+    "openhex": {}
+  }
+}

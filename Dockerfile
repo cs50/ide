@@ -60,21 +60,18 @@ RUN chown --recursive cs50.courses /home/cs50 && \
     chmod --recursive 755 /home/cs50 && \
     find /home/cs50 -type f -name "*.*" -exec chmod 644 {} +;
 
-COPY --chown=ubuntu:ubuntu c9 /opt/c9
-
+RUN chown ubuntu:ubuntu /opt/c9/
 USER ubuntu
 
-# Install, build, and compress Cloud9
-WORKDIR /opt/c9
-RUN ./install-script.sh
-RUN npm install
-RUN npm run build && mv packages/ide/cdn/* packages/cs50/cdn
-RUN rm -rf .git && \
-    cd packages/cs50 && \
-    node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"
+WORKDIR /opt/c9/
+
+# Install Cloud9
+RUN git clone --depth=1 https://github.com/c9/core.git .
+COPY --chown=ubuntu:ubuntu ./workspace-cs50.js configs/ide/
+COPY --chown=ubuntu:ubuntu ./plugins plugins/
+Run scripts/install-sdk.sh
 
 # Change default workdir
-RUN mkdir -p /home/ubuntu/workspace
-WORKDIR /home/ubuntu/workspace
+WORKDIR /home/ubuntu/
 
 CMD [ "/docker-entrypoint.sh" ]
