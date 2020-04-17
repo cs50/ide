@@ -67,9 +67,12 @@ WORKDIR /opt/c9/
 
 # Install Cloud9
 RUN git clone --depth=1 https://github.com/c9/core.git .
+
 COPY --chown=ubuntu:ubuntu ./workspace-cs50.js configs/ide/
 COPY --chown=ubuntu:ubuntu ./plugins plugins/
-Run scripts/install-sdk.sh
+
+RUN scripts/install-sdk.sh && \
+    mv /home/ubuntu/.c9 /opt/c9/
 
 # Change default workdir
 WORKDIR /home/ubuntu/
