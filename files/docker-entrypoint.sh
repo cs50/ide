@@ -6,7 +6,7 @@ echo "starting rsyslog..."
 sudo service rsyslog start
 
 C9_DEPENDS_DIR="/opt/c9/.c9"
-C9_DEPENDS=$(find "$C9_DEPENDS_DIR" -mindepth 1 -maxdepth 1 -type d)
+C9_DEPENDS=$(find "$C9_DEPENDS_DIR" -mindepth 1 -maxdepth 1)
 C9_DIR="$HOME/.c9"
 
 mkdir --parents "$C9_DIR"
