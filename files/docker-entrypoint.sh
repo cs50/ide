@@ -5,6 +5,9 @@ set -e
 echo "starting rsyslog..."
 sudo service rsyslog start
 
+echo "changing ownership of $HOME to $USER:$USER..."
+sudo chown "$USER":"$USER" "$HOME"
+
 C9_DEPENDS_DIR="/opt/c9/.c9"
 C9_DEPENDS=$(find "$C9_DEPENDS_DIR" -mindepth 1 -maxdepth 1)
 C9_DIR="$HOME/.c9"
