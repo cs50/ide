@@ -60,7 +60,7 @@ RUN chown --recursive cs50.courses /home/cs50 && \
     chmod --recursive 755 /home/cs50 && \
     find /home/cs50 -type f -name "*.*" -exec chmod 644 {} +;
 
-RUN chown ubuntu:ubuntu /opt/c9/
+RUN mkdir --parents /opt/c9 && chown ubuntu:ubuntu /opt/c9/
 USER ubuntu
 
 WORKDIR /opt/c9/
@@ -77,4 +77,4 @@ RUN scripts/install-sdk.sh && \
 # Change default workdir
 WORKDIR /home/ubuntu/
 
-CMD [ "/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
