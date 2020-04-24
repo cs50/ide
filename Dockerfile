@@ -31,7 +31,7 @@ RUN git clone --depth=1 https://github.com/noVNC/noVNC.git /opt/noVNC && \
     chown -R ubuntu:ubuntu /opt/noVNC
 
 # Install npm packages
-RUN npm install --global c9 gdb-mi-parser
+RUN npm install --global c9 gdb-mi-parser npm
 
 # Install Python packages
 RUN pip3 install \
@@ -64,17 +64,22 @@ COPY --chown=ubuntu:ubuntu c9 /opt/c9
 
 USER ubuntu
 
-# Install, build, and compress Cloud9
+# Install, build, and obfuscate Cloud9
 WORKDIR /opt/c9
 RUN ./install-script.sh
-RUN npm install
-RUN npm run build && mv packages/ide/cdn/* packages/cs50/cdn
-RUN rm -rf .git && \
-    cd packages/cs50 && \
-    node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"
+RUN npm cache verify && npm install && npm run build:packages && rm -rf .git
+# RUN cd packages/cs50 && \
+#     npm run build && \
+#     mv ../ide/cdn/* cdn && \
+#     cp bootstrap.c9.js cdn/bootstrap.js && \
+#     node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"
+
+RUN cd packages/cs50 && \
+    npm run build && \
+    mv ../ide/cdn/* cdn && \
+    cp bootstrap.c9.js cdn/bootstrap.js
 
 # Change default workdir
-RUN mkdir -p /home/ubuntu/workspace
-WORKDIR /home/ubuntu/workspace
+WORKDIR /home/ubuntu
 
 CMD [ "/docker-entrypoint.sh" ]
