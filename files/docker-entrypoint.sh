@@ -30,5 +30,22 @@ ln --force --symbolic "$C9_FOLDER"/* "$USER_C9_FOLDER"
 echo "starting rsyslog..."
 sudo service rsyslog start
 
+echo "starting TX quota monitor..."
+
+{
+    # 1 GB
+    MAX_TX_BYTES=$(( 1024**3 ))
+    trap "sudo service ssh stop" EXIT
+    while true; do
+        if [[ $(awk '/^ *eth0/ {print $10}' /proc/net/dev) -ge $MAX_TX_BYTES ]]; then
+            # TODO trigger alert
+            sudo service ssh stop
+            exit
+        fi
+
+        sleep 60
+    done
+} &
+
 echo "starting ssh..."
 sudo /usr/sbin/sshd -eD
