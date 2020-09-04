@@ -1,11 +1,15 @@
-sudo: required
-services: docker
 branches:
   except: "/^\\d+$/"
+dist: focal
 script: |
+  # TODO remove when https://github.com/moby/moby/issues/39120 is fixed
+  docker pull docker/dockerfile:experimental
+  docker pull cs50/cli
+
+  ssh-add <(echo -e "$CLOUD9_DEPLOY_KEY")
   REPO_SLUG="${TRAVIS_REPO_SLUG%-*}"
   export TRAVIS_TAG=$(( $(git tag --list --sort=version:refname | tail -n1) + 1 ))
-  docker build . -t "$REPO_SLUG:$TRAVIS_TAG"
+  DOCKER_BUILDKIT=1 docker build --ssh default --tag "$REPO_SLUG:$TRAVIS_TAG" .
 before_deploy:
 - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 - docker tag "$REPO_SLUG:$TRAVIS_TAG" "$REPO_SLUG:latest"

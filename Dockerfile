@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:experimental
 FROM cs50/cli
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -60,14 +61,19 @@ RUN chown --recursive cs50.courses /home/cs50 && \
     chmod --recursive 755 /home/cs50 && \
     find /home/cs50 -type f -name "*.*" -exec chmod 644 {} +;
 
-COPY --chown=ubuntu:ubuntu c9 /opt/c9
+
+# Clone Cloud9
+RUN mkdir -m600 /root/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
+RUN --mount=type=ssh git clone --depth=1 git@github.com:cs50/cloud9.git /opt/c9
+
+RUN chown --recursive ubuntu:ubuntu /opt/c9
 
 USER ubuntu
 
 # Install, build, and obfuscate Cloud9
 WORKDIR /opt/c9
 RUN ./install-script.sh
-RUN npm cache verify && npm install && npm run build:packages && rm -rf .git
+RUN npm install && npm run build:packages && rm -rf .git
 RUN cd packages/cs50 && \
     mv ../ide/cdn/* cdn && \
     cp bootstrap.cs50.js cdn/bootstrap.js && \
