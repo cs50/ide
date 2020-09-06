@@ -79,7 +79,8 @@ RUN cd packages/cs50 && \
     cp bootstrap.cs50.js cdn/bootstrap.js && \
     node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"
 
+
 # Change default workdir
-WORKDIR /home/ubuntu
+WORKDIR /home/ubuntu/workspace
 
 CMD [ "/docker-entrypoint.sh" ]
