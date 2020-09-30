@@ -83,4 +83,4 @@ RUN cd packages/cs50 && \
 # Change default workdir
 WORKDIR /home/ubuntu/workspace
 
-CMD [ "/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
