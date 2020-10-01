@@ -15,7 +15,7 @@ x11vnc -cursor arrow -display "$DISPLAY" -forever -loop -noxfixes -noxrecord -no
 PIDS="$PIDS $!"
 
 # Wait until VNC server is listening
-retries=5
+retries=10
 until sudo netstat -tulpn | grep -q 5900 || [[ $retries -eq 0 ]]; do
     sleep 1
     retries=$(( retries - 1 ))
