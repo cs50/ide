@@ -2,7 +2,19 @@
 
 set -e
 
-trap "pkill -P $$ &>/dev/null" ERR EXIT SIGINT SIGHUP
+if [[ -f /tmp/gui50 ]]; then
+    cat /tmp/gui50
+    exit 0
+fi
+
+
+function teardown() {
+    pkill -P $$
+    rm -f /tmp/gui50
+}
+
+
+trap "teardown &> /dev/null" ERR EXIT SIGINT SIGHUP
 
 # Create virtual screen
 DISPLAY="${DISPLAY:=:0}"
@@ -43,7 +55,7 @@ if [[ $retries -eq 0 ]]; then
     exit 2
 fi
 
-echo "$URL"
+echo "$URL" | tee /tmp/gui50
 
 # Block until a child process exits
 wait -n $PIDS &>/dev/null
