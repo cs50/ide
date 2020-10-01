@@ -23,7 +23,7 @@ PIDS="$PIDS $!"
 
 # Start VNC server
 X11VNC_PASSWORD="$(pwgen -s 16 1)"
-x11vnc -cursor arrow -display "$DISPLAY" -forever -loop -noxfixes -noxrecord -noxdamage -passwd "$X11VNC_PASSWORD" -xkb &>> /tmp/x11vnc.log &
+x11vnc -cursor arrow -display "$DISPLAY" -forever -loop -noxfixes -noxrecord -noxdamage -passwd "$X11VNC_PASSWORD" -xkb -shared &>> /tmp/x11vnc.log &
 PIDS="$PIDS $!"
 
 # Wait until VNC server is listening
