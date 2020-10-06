@@ -2,7 +2,19 @@
 
 set -e
 
-trap "pkill -P $$ &>/dev/null" ERR EXIT SIGINT SIGHUP
+if [[ -f /tmp/gui50 ]]; then
+    cat /tmp/gui50
+    exit 0
+fi
+
+
+function teardown() {
+    pkill -P $$
+    rm -f /tmp/gui50
+}
+
+
+trap "teardown &> /dev/null" ERR EXIT SIGINT SIGHUP
 
 # Create virtual screen
 DISPLAY="${DISPLAY:=:0}"
@@ -11,11 +23,11 @@ PIDS="$PIDS $!"
 
 # Start VNC server
 X11VNC_PASSWORD="$(pwgen -s 16 1)"
-x11vnc -cursor arrow -display "$DISPLAY" -forever -loop -noxfixes -noxrecord -noxdamage -passwd "$X11VNC_PASSWORD" -xkb &>> /tmp/x11vnc.log &
+x11vnc -cursor arrow -display "$DISPLAY" -forever -loop -noxfixes -noxrecord -noxdamage -passwd "$X11VNC_PASSWORD" -xkb -shared &>> /tmp/x11vnc.log &
 PIDS="$PIDS $!"
 
 # Wait until VNC server is listening
-retries=5
+retries=10
 until sudo netstat -tulpn | grep -q 5900 || [[ $retries -eq 0 ]]; do
     sleep 1
     retries=$(( retries - 1 ))
@@ -43,7 +55,7 @@ if [[ $retries -eq 0 ]]; then
     exit 2
 fi
 
-echo "$URL"
+echo "$URL" | tee /tmp/gui50
 
 # Block until a child process exits
 wait -n $PIDS &>/dev/null
