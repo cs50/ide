@@ -6,6 +6,8 @@ trap "pkill -P $$ &>/dev/null; exit;" SIGTERM
 
 BRANCH="master"
 DIR=""
+PREFIX="$HOME/workspace"
+INIT_ONLY=0
 while [ $# -gt 0 ]; do
     case $1 in
         -r|--repo)
@@ -20,7 +22,17 @@ while [ $# -gt 0 ]; do
             shift
             DIR="$1"
             ;;
+        -p|--directory-prefix)
+            shift
+            PREFIX="$1"
+            ;;
+        --init-only)
+            shift
+            INIT_ONLY=1
+            ;;
         *)
+            echo "invalid option $1"
+            exit 1
             ;;
     esac
 
@@ -41,15 +53,21 @@ if [[ -n "$REPO" ]]; then
     echo "removing .cs50.y[a]ml..."
     rm --force "$SRC/.cs50.y{a,}ml"
 
-    echo "moving "$SRC/*" into $HOME..."
+    echo "moving "$SRC/*" into $PREFIX..."
 
     # shopt exists with 1 if disabled
     OPT=$(shopt -p dotglob || true)
     shopt -s dotglob
-    mv --verbose "$SRC"/* "$HOME/workspace"
+    mv --verbose "$SRC"/* "$PREFIX"
     $OPT
 
     rm --recursive --force "$tmp"
+    if [[ $INIT_ONLY -eq 1 ]]; then
+        exit 0
+    fi
+elif [[ $INIT_ONLY -eq 1 ]]; then
+    echo "invalid option --init-only"
+    exit 1
 fi
 
 
