@@ -77,7 +77,7 @@ RUN npm install && npm run build:packages && rm -rf .git
 RUN cd packages/cs50 && \
     mv ../ide/cdn/* cdn && \
     cp bootstrap.cs50.js cdn/bootstrap.js && \
-    node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"
+    if [[ "$IDE_ENV" != "dev" ]]; then node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"; fi
 
 
 # Change default workdir
