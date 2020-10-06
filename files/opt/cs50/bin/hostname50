@@ -3,20 +3,20 @@
 while [ $# -gt 0 ]; do
     case "$1" in
         --c9-port)
-            c9_port=1
+            C9_PORT=1
         ;;
 
         --protocol)
-            protocol=1
+            PROTOCOL=1
         ;;
     esac
 
     shift
 done
 
-if [ $protocol ]; then
+if [[ $PROTOCOL -eq 1 ]]; then
     echo -n "http"
-    if [ -z "${IDE_OFFLINE+x}" ];then
+    if [[ "$CS50_IDE_TYPE" == "online" ]]; then
         echo -n "s"
     fi
 
@@ -25,6 +25,6 @@ fi
 
 echo -n "${C9_HOSTNAME}"
 
-if [ $c9_port ]; then
+if [[ $C9_PORT -eq 1 ]]; then
     echo ":${C9_PORT}"
 fi
