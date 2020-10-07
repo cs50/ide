@@ -9,6 +9,10 @@ fi
 # Set maximum file size to 512MB
 ulimit -Sf 524288
 
+
+alias cd="HOME=$HOME/workspace cd"
+alias ls="ls --color -F --ignore=lost+found"
+
 alias open="c9 open"
 alias ddb="c9 exec ddb"
 
