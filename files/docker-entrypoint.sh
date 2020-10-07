@@ -74,8 +74,12 @@ fi
 echo "starting rsyslog..."
 sudo service rsyslog start
 
+USER="$(whoami)"
+echo "changing ownership of $HOME/workspace to $USER:$USER..."
+sudo chown --recursive "$USER":"$USER" "$HOME/workspace"
+
 echo "removing sudo access..."
-sudo sed -i '/^ubuntu ALL=(ALL) NOPASSWD:ALL$/d' /etc/sudoers
+sudo sed -i "/^$USER ALL=(ALL) NOPASSWD:ALL$/d" /etc/sudoers
 
 
 cd /opt/c9/packages/cs50 && npm run standalone$STANDALONE_MODE &
