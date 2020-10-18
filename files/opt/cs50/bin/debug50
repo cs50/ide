@@ -2,7 +2,7 @@
 
 # Check args
 if [ $# -lt 1 ]; then
-    echo "Usage: $0 PROGRAM [ARGUMENT ...]"
+    echo "Usage: $(basename $0) PROGRAM [ARGUMENT ...]"
     exit 1
 fi
 
