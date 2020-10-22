@@ -12,11 +12,13 @@ USER root
 # Install apt packages
 RUN apt-get update --quiet && \
     apt-get install --yes \
+        coreutils `# for fold` \
         libncurses-dev \
         libphp-phpmailer \
         libxslt1-dev \
         netcat-openbsd \
         net-tools \
+        ncurses-bin `# for tput` \
         openssh-server \
         pgloader \
         postgresql \
