@@ -38,6 +38,10 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+USER="$(whoami)"
+echo "changing ownership of $HOME/workspace to $USER:$USER..."
+sudo chown --recursive "$USER":"$USER" "$HOME/workspace"
+
 if [[ -n "$REPO" ]]; then
     tmp="$(mktemp -d)"
     echo "cloning $REPO@$BRANCH into $tmp..."
@@ -51,6 +55,9 @@ if [[ -n "$REPO" ]]; then
 
     echo "removing .cs50.y[a]ml..."
     rm --force "$SRC/.cs50.y{a,}ml"
+
+    echo "removing README.md..."
+    rm --force "$SRC/README.md"
 
     echo "moving "$SRC/*" into $PREFIX..."
 
@@ -69,17 +76,11 @@ elif [[ $INIT_ONLY -eq 1 ]]; then
     exit 1
 fi
 
-
 echo "starting rsyslog..."
 sudo service rsyslog start
 
-USER="$(whoami)"
-echo "changing ownership of $HOME/workspace to $USER:$USER..."
-sudo chown --recursive "$USER":"$USER" "$HOME/workspace"
-
 echo "removing sudo access..."
 sudo sed -i "/^$USER ALL=(ALL) NOPASSWD:ALL$/d" /etc/sudoers
-
 
 cd /opt/c9/packages/cs50 && npm run standalone$STANDALONE_MODE &
 wait
