@@ -27,7 +27,6 @@ while [ $# -gt 0 ]; do
             PREFIX="$1"
             ;;
         --init-only)
-            shift
             INIT_ONLY=1
             ;;
         *)
