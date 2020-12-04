@@ -82,5 +82,9 @@ sudo service rsyslog start
 echo "removing sudo access..."
 sudo sed -i "/^$USER ALL=(ALL) NOPASSWD:ALL$/d" /etc/sudoers
 
+if [[ -n "$STANDALONE_MODE" ]]; then
+    STANDALONE_MODE=":$STANDALONE_MODE"
+fi
+
 cd /opt/c9/packages/cs50 && npm run standalone$STANDALONE_MODE &
 wait
