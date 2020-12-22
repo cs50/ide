@@ -39,5 +39,7 @@ http_server() {
     unbuffer /opt/cs50/bin/http-server "$@" | unbuffer -p sed -E "s#${URL}#\1TODO\4#" | uniq
 }
 
+alias http-server=http_server # https://unix.stackexchange.com/a/168222
+
 # X Window System
 export DISPLAY=":0"
