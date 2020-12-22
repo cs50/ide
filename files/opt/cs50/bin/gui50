@@ -28,7 +28,7 @@ PIDS="$PIDS $!"
 
 # Wait until VNC server is listening
 retries=10
-until netstat -tulpn | grep -q 5900 || [[ $retries -eq 0 ]]; do
+until netstat -tulpn 2>/dev/null | grep -q 5900 || [[ $retries -eq 0 ]]; do
     sleep 1
     retries=$(( retries - 1 ))
 done
@@ -43,7 +43,14 @@ NOVNC_PORT=8082
 /opt/noVNC/utils/launch.sh --listen $NOVNC_PORT &>>/tmp/noVNC.log &
 PIDS="$PIDS $!"
 
-URL="$(hostname50 --protocol):$NOVNC_PORT/vnc.html?autoconnect=true&host=$(hostname50)&port=$NOVNC_PORT&password=$X11VNC_PASSWORD"
+NOVNC_URL="$(echo "http://$(hostname -i):$NOVNC_PORT" | hostname50)"
+if [[ "$CS50_IDE_TYPE" = "online" ]]; then
+    NOVNC_PORT_PARAM=443
+else
+    NOVNC_PORT_PARAM=$NOVNC_PORT
+fi
+
+URL="$NOVNC_URL/vnc.html?autoconnect=true&host=$(sed 's#^http://##; s#:.*$##;' <<<$NOVNC_URL)&port=$NOVNC_PORT_PARAM&password=$X11VNC_PASSWORD"
 retries=5
 until curl -fLs  "http://localhost:$NOVNC_PORT" &>/dev/null || [[ $retries -eq 0 ]]; do
     sleep 1

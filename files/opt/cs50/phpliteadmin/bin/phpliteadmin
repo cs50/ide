@@ -117,10 +117,11 @@ if [ ! $ticks ]; then
     exit 1
 fi
 
+URL="$(echo "http://$(hostname -i):$PORT/?password=$password" | hostname50)"
 if [[ $URL_ONLY ]]; then
-    echo "$(hostname50 --protocol):$PORT/?password=$password"
+    echo "$URL"
 else
-    echo "Running phpLiteAdmin at $(hostname50 --protocol):$PORT/?password=$password"
+    echo "Running phpLiteAdmin at $URL"
     echo -n "Exit with ctrl-c..."
 fi
 

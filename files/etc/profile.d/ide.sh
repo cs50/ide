@@ -30,13 +30,12 @@ esac
 ulimit -Sf 524288
 
 # Wrappers
-URL="(http://)[0-9]+\.[0-9]+\.[0-9]+\.[0-9]:(\x1b\[[0-9;]*m)?[0-9]+(\x1b\[[0-9;]*m)?(\S+)"
 flask() {
-    unbuffer /opt/cs50/bin/flask "$@" | sed -E "s#${URL}#\1TODO\4#"
+    unbuffer /opt/cs50/bin/flask "$@" | hostname50
 }
 
 http_server() {
-    unbuffer /opt/cs50/bin/http-server "$@" | unbuffer -p sed -E "s#${URL}#\1TODO\4#" | uniq
+    unbuffer /opt/cs50/bin/http-server "$@" | hostname50 | uniq
 }
 
 alias http-server=http_server # https://unix.stackexchange.com/a/168222
