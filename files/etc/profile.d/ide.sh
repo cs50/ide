@@ -1,5 +1,5 @@
 # If not root
-if [ "$USER" != "root" ]; then
+if [ "$(whoami)" != "root" ]; then
 
     # Shift out and in of block character palettes
     alias break50="printf '\x0e'"
