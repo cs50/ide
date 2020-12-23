@@ -1,12 +1,14 @@
 #!/bin/bash
 
-if [ "$CS50_IDE_TYPE" != "online" ]; then
-    tee
-else
+if [ "$CS50_IDE_TYPE" = "online" ]; then
+    # Replace URLs with APP_DOMAIN URLs in online IDE
     URL="(http://)[^:]+:(\x1b\[[0-9;]*m)?([0-9]+)(\x1b\[[0-9;]*m)?(\S*)"
     while read line; do
         echo "$line" | sed -E "s#${URL}#\1$(hostname)-\3.$APP_DOMAIN\5#"
     done
+else
+    # Keep output as is in offline IDE
+    tee
 fi
 
 
