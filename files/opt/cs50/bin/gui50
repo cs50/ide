@@ -43,6 +43,7 @@ NOVNC_PORT=8082
 /opt/noVNC/utils/launch.sh --listen $NOVNC_PORT &>>/tmp/noVNC.log &
 PIDS="$PIDS $!"
 
+# Determine URL and port based on IDE type
 NOVNC_URL="$(echo "http://$(hostname -i):$NOVNC_PORT" | hostname50)"
 if [[ "$CS50_IDE_TYPE" = "online" ]]; then
     NOVNC_PORT_PARAM=443
@@ -50,6 +51,7 @@ else
     NOVNC_PORT_PARAM=$NOVNC_PORT
 fi
 
+# Wait until noVNC server is listening
 URL="$NOVNC_URL/vnc.html?autoconnect=true&host=$(sed 's#^http://##; s#:.*$##;' <<<$NOVNC_URL)&port=$NOVNC_PORT_PARAM&password=$X11VNC_PASSWORD"
 retries=5
 until curl -fLs  "http://localhost:$NOVNC_PORT" &>/dev/null || [[ $retries -eq 0 ]]; do
@@ -62,6 +64,7 @@ if [[ $retries -eq 0 ]]; then
     exit 2
 fi
 
+# Remember URL in /tmp/gui50
 echo "$URL" | tee /tmp/gui50
 
 # Block until a child process exits
