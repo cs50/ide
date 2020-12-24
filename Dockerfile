@@ -9,6 +9,7 @@ USER root
 # Install apt packages
 RUN apt-get update --quiet && \
     apt-get install --yes \
+        coreutils `# for fold` \
         libncurses-dev \
         libphp-phpmailer \
         libxslt1-dev \
@@ -21,6 +22,7 @@ RUN apt-get update --quiet && \
         php-sqlite3 `# phpliteadmin dependency` \
         pwgen `# phpliteadmin dependency` \
         php-xdebug \
+        python \
         rsync \
         rsyslog \
         x11vnc \
@@ -39,13 +41,11 @@ RUN npm install --global c9 gdb-mi-parser npm
 # Install Python packages
 RUN pip3 install \
         git+git://github.com/cs50/ikp3db.git \
-        nltk \
         plotly \
         pylint \
         pylint_django \
         pylint_flask \
-        twython && \
-    python3 -m nltk.downloader -d /usr/share/nltk_data/ punkt
+        twython
 
 # Add courses group
 RUN groupadd --system courses

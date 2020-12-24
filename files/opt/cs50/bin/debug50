@@ -2,7 +2,7 @@
 
 # Check args
 if [ $# -lt 1 ]; then
-    echo "Usage: $0 PROGRAM [ARGUMENT ...]"
+    echo "Usage: $(basename $0) PROGRAM [ARGUMENT ...]"
     exit 1
 fi
 
@@ -21,6 +21,11 @@ if ! [ -f "$1" ]; then
     exit 1
 fi
 
+# Wrap long lines
+function wrap() {
+    echo "$1" | fold -s -w $(tput cols)
+}
+
 # Create named pipe for netcat and ikp3db communication
 if [ ! -p /home/ubuntu/.c9/ikp3dbpipe ]; then
     mkfifo /home/ubuntu/.c9/ikp3dbpipe
@@ -30,7 +35,7 @@ fi
 PID=$$
 if file "$1" | grep -qo "ELF 64-bit LSB \(executable\|shared object\)"; then
     if ! [ "$(readelf -wL "$1")" ]; then
-        echo "Can't debug this program! Are you sure you compiled it with -ggdb?"
+        wrap "Can't debug this program! Are you sure you compiled it with -ggdb?"
         exit 1
     fi
 
@@ -62,7 +67,7 @@ gdb.stdin.write('-file-list-exec-source-files\n'); \
     do
         # Ensure executable is more recent than source and header files
         if [ "$f" -nt "$1" ]; then
-            echo "Looks like you've changed your code. Recompile and then re-run debug50!"
+            wrap "Looks like you've changed your code. Recompile and then re-run debug50!"
             exit 1
         fi
 
@@ -79,7 +84,7 @@ gdb.stdin.write('-file-list-exec-source-files\n'); \
 
     # No breakpoints found
     if [ "$breakpoint" = false ]; then
-        echo "Looks like you haven't set any breakpoints. Set at least one breakpoint by clicking to the left of a line number and then re-run debug50!"
+        wrap "Looks like you haven't set any breakpoints. Set at least one breakpoint by clicking to the left of a line number and then re-run debug50!"
         exit 1
     fi
 
@@ -91,7 +96,7 @@ gdb.stdin.write('-file-list-exec-source-files\n'); \
     ERR=$(c9 exec startDebugger gdb $PID)
 elif [[ "$1" = *.py || $(head --lines=1 "$1") =~ ^#!.*python.*$ ]]; then
     if [ -n "$(c9 exec  breakpoint_set "$(realpath $1)")" ]; then
-        echo "Looks like you haven't set any breakpoints. Set at least one breakpoint by clicking to the left of a line number and then re-run debug50!"
+        wrap "Looks like you haven't set any breakpoints. Set at least one breakpoint by clicking to the left of a line number and then re-run debug50!"
         exit 1
     fi
 
@@ -100,13 +105,13 @@ elif [[ "$1" = *.py || $(head --lines=1 "$1") =~ ^#!.*python.*$ ]]; then
     # Give PID to proxy for monitoring
     ERR=$(c9 exec startDebugger ikp3db $PID)
 else
-    echo "Can't debug this program! Are you sure you're running debug50 on an executable or a Python script?"
+    wrap "Can't debug this program! Are you sure you're running debug50 on an executable or a Python script?"
     exit 1
 fi
 
 # c9 exec doesn't return non-zero on error!
 if [ "$ERR" = "Could not execute startDebugger" ]; then
-    echo "Unable to start!"
+    wrap "Unable to start!"
     exit 1
 fi
 
