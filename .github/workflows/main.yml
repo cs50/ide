@@ -20,12 +20,20 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Set up SSH key
+        run: |
+          eval "$(ssh-agent -a /tmp/ssh_agent.sock)"
+          ssh-add - <<< "${{ secrets.CLOUD9_DEPLOY_KEY }}"
+
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         with:
           push: true
           tags: cs50/ide:offline
+          ssh: default
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
