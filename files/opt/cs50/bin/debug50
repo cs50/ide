@@ -42,7 +42,7 @@ if file "$1" | grep -qo "ELF 64-bit LSB \(executable\|shared object\)"; then
     # Get source files from gdb
     sources=$(node -e "\
 const { spawn } = require('child_process'); \
-const parser = require('/usr/lib/node_modules/gdb-mi-parser'); \
+const parser = require('/usr/local/lib/node_modules/gdb-mi-parser'); \
 const gdb = spawn('gdb', ['-q', '--interpreter=mi2', process.argv[1]]); \
 gdb.stdout.on('data', function handleGDBOutput(data) { \
   output = parser(data.toString()); \
