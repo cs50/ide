@@ -32,7 +32,7 @@ jobs:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         with:
           push: true
-          tags: cs50/ide:offline
+          tags: cs50/ide:offline,cs50/ide:${{ github.ref }}
           ssh: default
 
       - name: Image digest
