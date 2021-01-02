@@ -1,9 +1,9 @@
-IMAGE ?= cs50/ide
+TAG ?= cs50/ide
 
 .PHONY: build
 build:
-	DOCKER_BUILDKIT=1 docker build $(OPTS) --ssh default --tag $(IMAGE) .
+	DOCKER_BUILDKIT=1 docker build $(OPTS) --ssh default --tag $(TAG) .
 
 .PHONY: build
 dev:
-	make build OPTS="$(OPTS) --build-arg SKIP_PACKAGE_COMPRESSION=1"
+	TAG=cs50/ide:dev make build OPTS="$(OPTS) --build-arg SKIP_PACKAGE_COMPRESSION=1"
