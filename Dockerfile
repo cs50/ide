@@ -87,6 +87,6 @@ RUN cd packages/cs50 && \
     if [ -z "$SKIP_PACKAGE_COMPRESSION" ]; then echo "compressing packages..."; node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"; else echo "skipping package compression..."; fi
 
 # Change default workdir
-WORKDIR /home/ubuntu/workspace
+WORKDIR /home/ubuntu
 
 ENTRYPOINT [ "/docker-entrypoint.sh" ]

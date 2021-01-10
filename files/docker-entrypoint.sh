@@ -6,7 +6,7 @@ trap "pkill -P $$ &>/dev/null; exit;" SIGTERM
 
 BRANCH="master"
 DIR=""
-PREFIX="$HOME/workspace"
+PREFIX="$HOME"
 INIT_ONLY=0
 while [ $# -gt 0 ]; do
     case $1 in
@@ -39,8 +39,11 @@ while [ $# -gt 0 ]; do
 done
 
 USER="$(whoami)"
-echo "changing ownership of $HOME/workspace to $USER:$USER..."
-sudo chown --recursive "$USER":"$USER" "$HOME/workspace"
+echo "changing ownership of $HOME to $USER:$USER..."
+sudo chown --recursive "$USER":"$USER" "$HOME"
+
+# Symlink cloud9 dependencies
+sudo rm --force --recursive "$HOME/.c9" && ln -s /opt/c9/.c9 "$HOME/.c9"
 
 if [[ -n "$REPO" ]]; then
     tmp="$(mktemp -d)"
