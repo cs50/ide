@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:experimental
-FROM cs50/cli:focal
+FROM cs50/cli
 ARG DEBIAN_FRONTEND=noninteractive
 
 EXPOSE 1337 8080-8082
