@@ -52,7 +52,7 @@ else
 fi
 
 # Wait until noVNC server is listening
-URL="$NOVNC_URL/vnc.html?autoconnect=true&host=$(sed 's#^http://##; s#:.*$##;' <<<$NOVNC_URL)&port=$NOVNC_PORT_PARAM&password=$X11VNC_PASSWORD"
+URL="$NOVNC_URL/vnc.html?autoconnect=true&host=$(sed -E 's#^https?://##; s#:.*$##;' <<<$NOVNC_URL)&port=$NOVNC_PORT_PARAM&password=$X11VNC_PASSWORD"
 retries=5
 until curl -fLs  "http://localhost:$NOVNC_PORT" &>/dev/null || [[ $retries -eq 0 ]]; do
     sleep 1
