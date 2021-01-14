@@ -8,6 +8,13 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
@@ -37,3 +44,9 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - name: Upload to CDN
+        run: |
+          ID="$(docker create cs50/ide)"
+          docker cp "$ID":/opt/c9/packages/cs50/cdn .
+          aws s3 cp --recursive cdn/ "s3://mirror.cs50.net/ide/$(cat cdn/head)/"

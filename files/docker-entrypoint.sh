@@ -29,6 +29,12 @@ while [ $# -gt 0 ]; do
         --init-only)
             INIT_ONLY=1
             ;;
+        --dev)
+            STANDALONE_MODE=":dev"
+            ;;
+        --use-cdn)
+            STANDALONE_MODE=":cdn"
+            ;;
         *)
             echo "invalid option $1"
             exit 1
@@ -84,10 +90,6 @@ sudo service rsyslog start
 
 echo "removing sudo access..."
 sudo sed -i "/^$USER ALL=(ALL) NOPASSWD:ALL$/d" /etc/sudoers
-
-if [[ -n "$STANDALONE_MODE" ]]; then
-    STANDALONE_MODE=":$STANDALONE_MODE"
-fi
 
 cd /opt/c9/packages/cs50 && npm run standalone$STANDALONE_MODE &
 wait
