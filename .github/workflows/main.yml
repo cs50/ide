@@ -41,12 +41,13 @@ jobs:
           push: true
           tags: cs50/ide:latest,cs50/ide:${{ github.sha }}
           ssh: default
+          build-args: |
+            GITHUB_SHA=${{ github.sha }}
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: Upload to CDN
         run: |
-          ID="$(docker create cs50/ide)"
-          docker cp "$ID":/opt/c9/packages/cs50/cdn .
-          aws s3 cp --recursive cdn/ "s3://mirror.cs50.net/ide/$(cat cdn/head)/"
+          docker cp "$(docker create cs50/ide)":/opt/c9/packages/cs50/cdn .
+          aws s3 cp --recursive cdn/ "s3://mirror.cs50.net/ide/${{ github.sha }}/"

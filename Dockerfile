@@ -78,17 +78,17 @@ USER ubuntu
 # Install, build, and obfuscate Cloud9
 WORKDIR /opt/c9
 RUN ./install-script.sh
-RUN npm install && npm run build:packages
+RUN npm install && npm run build:packages && rm -rf .git
 
+ARG GITHUB_SHA
 ARG SKIP_PACKAGE_COMPRESSION
 RUN cd packages/cs50 && \
     mv ../ide/cdn/* cdn && \
     cp bootstrap.cs50.js cdn/bootstrap.js && \
     cp cdn/ide.html cdn/ide-cdn.html && \
     echo -n "$(git rev-parse HEAD)" > cdn/head && \
-    sed -i "s#\./#https://mirror.cs50.net/ide/$(git rev-parse HEAD)/#g" cdn/ide-cdn.html && \
-    if [ -z "$SKIP_PACKAGE_COMPRESSION" ]; then echo "compressing packages..."; node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"; else echo "skipping package compression..."; fi && \
-    rm -rf /opt/c9/.git
+    sed -i "s#\./#https://mirror.cs50.net/ide/$GITHUB_SHA/#g" cdn/ide-cdn.html && \
+    if [ -z "$SKIP_PACKAGE_COMPRESSION" ]; then echo "compressing packages..."; node -e "require('@c9/architect-build/compress_folder')('/opt/c9', {exclude: /^(cdn|node_modules|mock)$/})"; else echo "skipping package compression..."; fi
 
 # Change default workdir
 WORKDIR /home/ubuntu
