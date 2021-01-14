@@ -26,6 +26,10 @@ case $- in
     *i*) stty -ixon ;;
 esac
 
+
+# Disable core files
+ulimit -c 0
+
 # Set maximum file size to 512MB
 ulimit -Sf 524288
 
