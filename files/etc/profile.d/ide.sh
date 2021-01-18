@@ -43,6 +43,7 @@ http_server() {
 }
 
 alias http-server=http_server # https://unix.stackexchange.com/a/168222
+alias java="java -Dsun.java2d.xrender=false"
 
 # X Window System
 export DISPLAY=":0"
