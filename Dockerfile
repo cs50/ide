@@ -15,6 +15,8 @@ RUN apt-get update --quiet && \
         libxslt1-dev \
         netcat-openbsd \
         net-tools \
+        openbox \
+        obconf \
         pgloader \
         postgresql \
         php-cgi \

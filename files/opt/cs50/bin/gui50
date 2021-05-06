@@ -43,6 +43,10 @@ NOVNC_PORT=8082
 /opt/noVNC/utils/launch.sh --listen $NOVNC_PORT &>>/tmp/noVNC.log &
 PIDS="$PIDS $!"
 
+# Start window manager
+openbox-session &>>/tmp/noVNC.log &
+PIDS="$PIDS $!"
+
 # Determine URL and port based on IDE type
 NOVNC_URL="$(echo "http://$(hostname -i):$NOVNC_PORT" | hostname50)"
 if [[ "$CS50_IDE_TYPE" = "online" ]]; then
