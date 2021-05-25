@@ -2,4 +2,5 @@
 
 set -e -o pipefail
 
-check50 --local "$INPUT_SLUG"
+args=( $INPUT_CHECK50_ARGS )
+check50 "${args[@]}"
