@@ -30,6 +30,18 @@ RUN apt-get update --quiet && \
         x11vnc \
         xvfb
 
+# Teacher requirements
+RUN apt-get install --yes \
+        cmocka-doc \
+        libcurl4-gnutls-dev \
+        libcmocka0 \
+        libcmocka-dev \
+        odbcinst \
+        odbc-mariadb \
+        unixodbc \
+        unixodbc-dev
+
+
 # Disable kernel log, container doesn't have read permission
 RUN sed --in-place 's/\(module(load="imklog" permitnonkernelfacility="on")\)/# \1/' /etc/rsyslog.conf
 
