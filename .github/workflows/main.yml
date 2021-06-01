@@ -55,4 +55,4 @@ jobs:
           # Push Docker image
           docker push cs50/ide:${{ github.sha }}
           docker push cs50/ide:latest
-        if: ${{ github.ref == "refs/heads/main" }}
+        if: ${{ github.ref == 'refs/heads/main' }}
