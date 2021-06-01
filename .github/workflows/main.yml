@@ -1,11 +1,11 @@
-name: Build and push
+name: Build and deploy
 
 on:
   push:
-    branches: main
+    branches: "*"
 
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS Credentials
@@ -32,13 +32,12 @@ jobs:
           eval "$(ssh-agent -a /tmp/ssh_agent.sock)"
           ssh-add - <<< "${{ secrets.CLOUD9_DEPLOY_KEY }}"
 
-      - name: Build and push
+      - name: Build
         id: docker_build
         uses: docker/build-push-action@v2
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         with:
-          push: true
           tags: cs50/ide:latest,cs50/ide:${{ github.sha }}
           ssh: default
           build-args: |
@@ -47,7 +46,13 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-      - name: Upload to CDN
+      - name: Deploy
         run: |
+          # Upload static assets to CDN
           docker cp "$(docker create cs50/ide)":/opt/c9/packages/cs50/cdn .
           aws s3 cp --recursive cdn/ "s3://mirror.cs50.net/ide/${{ github.sha }}/"
+
+          # Push Docker image
+          docker push cs50/ide:${{ github.sha }}
+          docker push cs50/ide:latest
+        if: github.ref == "refs/heads/main"
