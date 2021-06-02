@@ -49,7 +49,21 @@ jobs:
             GITHUB_SHA=${{ github.sha }}
           load: true
 
+      - name: Disk
+        run: |
+          df -h
+          docker buildx du
+
+      - name: Remove dotnet
+        run: sudo rm -rf /usr/share/dotnet
+
+      - name: Disk
+        run: |
+          df -h
+          docker buildx du
+
       - name: Deploy
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           # Upload static assets to CDN
           docker cp "$(docker create cs50/ide:${{ github.sha }})":/opt/c9/packages/cs50/cdn .
@@ -58,4 +72,3 @@ jobs:
           # Push Docker image
           docker push cs50/ide:${{ github.sha }}
           docker push cs50/ide:latest
-        if: ${{ github.ref == 'refs/heads/main' }}
