@@ -51,12 +51,10 @@ jobs:
             GITHUB_SHA=${{ github.sha }}
           push: true
 
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
-
       - name: Deploy
         run: |
           # Tag image
+          docker buildx imagetools inspect localhost:5000/cs50/ide:latest
           docker tag localhost:5000/cs50/ide:latest cs50/ide:${{ github.sha }}
           docker tag localhost:5000/cs50/ide:latest cs50/ide:latest
 
