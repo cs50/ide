@@ -45,19 +45,14 @@ jobs:
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         with:
-          tags: localhost:5000/cs50/ide:latest
+          tags: cs50/ide:${{ github.sha }},cs50/ide:latest
           ssh: default
           build-args: |
             GITHUB_SHA=${{ github.sha }}
-          push: true
+          load: true
 
       - name: Deploy
         run: |
-          # Tag image
-          docker buildx imagetools inspect localhost:5000/cs50/ide:latest
-          docker tag localhost:5000/cs50/ide:latest cs50/ide:${{ github.sha }}
-          docker tag localhost:5000/cs50/ide:latest cs50/ide:latest
-
           # Upload static assets to CDN
           docker cp "$(docker create cs50/ide:${{ github.sha }})":/opt/c9/packages/cs50/cdn .
           aws s3 cp --recursive cdn/ "s3://mirror.cs50.net/ide/${{ github.sha }}/"
