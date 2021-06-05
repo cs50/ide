@@ -32,6 +32,7 @@ RUN apt-get update --quiet && \
 
 # Teacher requirements
 RUN apt-get install --yes \
+        doxygen \
         cmocka-doc \
         libcurl4-gnutls-dev \
         libcmocka0 \
