@@ -37,6 +37,10 @@ jobs:
           eval "$(ssh-agent -a /tmp/ssh_agent.sock)"
           ssh-add - <<< "${{ secrets.CLOUD9_DEPLOY_KEY }}"
 
+      # https://github.com/docker/build-push-action/issues/321#issuecomment-819897120
+      - name: Remove dotnet
+        run: sudo rm -rf /usr/share/dotnet
+
       - name: Build and push to local registry
         id: docker_build
         uses: docker/build-push-action@v2
@@ -48,19 +52,6 @@ jobs:
           build-args: |
             GITHUB_SHA=${{ github.sha }}
           load: true
-
-      - name: Disk
-        run: |
-          df -h
-          docker buildx du
-
-      - name: Remove dotnet
-        run: sudo rm -rf /usr/share/dotnet
-
-      - name: Disk
-        run: |
-          df -h
-          docker buildx du
 
       - name: Deploy
         if: ${{ github.ref == 'refs/heads/main' }}
