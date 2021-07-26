@@ -47,7 +47,9 @@ RUN apt-get install --yes \
 RUN sed --in-place 's/\(module(load="imklog" permitnonkernelfacility="on")\)/# \1/' /etc/rsyslog.conf
 
 # Install noVNC
-RUN git clone --depth=1 https://github.com/noVNC/noVNC.git /opt/noVNC && \
+RUN wget https://github.com/novnc/noVNC/archive/refs/tags/v1.2.0.zip -P/tmp && \
+    unzip /tmp/v1.2.0.zip -d /tmp && \
+    mv /tmp/noVNC-1.2.0 /opt/noVNC && \
     chown -R ubuntu:ubuntu /opt/noVNC
 
 # Install node 12.x
