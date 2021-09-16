@@ -117,7 +117,13 @@ if [ ! $ticks ]; then
     exit 1
 fi
 
-URL="$(echo "http://$(hostname -i):$PORT/?password=$password" | hostname50)"
+# Create a different URL depending on the IDE type
+if [[ $CS50_IDE_TYPE -eq offline ]]; then
+    URL="http://localhost:$PORT/?password=$password"
+else
+    URL="$(echo "http://$(hostname -i):$PORT/?password=$password" | hostname50)"
+fi
+
 if [[ $URL_ONLY ]]; then
     echo "$URL"
 else
