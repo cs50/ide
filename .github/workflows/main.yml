@@ -47,7 +47,7 @@ jobs:
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         with:
-          tags: cs50/ide:${{ github.sha }},cs50/ide:latest
+          tags: cs50/ide:${{ github.sha }},cs50/ide:minimal
           ssh: default
           build-args: |
             GITHUB_SHA=${{ github.sha }}
