@@ -7,5 +7,5 @@ git clone https://github.com/cs50/ide.git
 cd ide
 make dev
 make startdev
-# Then visit http://localhost:1337/static/ide.html
+# Then visit http://localhost:1337
 ```
