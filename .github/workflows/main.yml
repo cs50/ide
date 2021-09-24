@@ -54,7 +54,7 @@ jobs:
           load: true
 
       - name: Deploy
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/minimal' }}
         run: |
           # Upload static assets to CDN
           docker cp "$(docker create cs50/ide:${{ github.sha }})":/opt/c9/packages/cs50/cdn .
@@ -62,4 +62,4 @@ jobs:
 
           # Push Docker image
           docker push cs50/ide:${{ github.sha }}
-          docker push cs50/ide:latest
+          docker push cs50/ide:minimal
