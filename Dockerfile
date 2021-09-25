@@ -10,6 +10,7 @@ USER root
 RUN apt-get update --quiet && \
     apt-get install --yes \
         coreutils `# for fold` \
+        gdbserver \
         libncurses-dev \
         libphp-phpmailer \
         libxslt1-dev \
