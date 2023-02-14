@@ -10,6 +10,7 @@ USER root
 RUN apt-get update --quiet && \
     apt-get install --yes \
         coreutils `# for fold` \
+        file \
         libncurses-dev \
         libphp-phpmailer \
         libxslt1-dev \
@@ -24,9 +25,10 @@ RUN apt-get update --quiet && \
         php-sqlite3 `# phpliteadmin dependency` \
         pwgen `# phpliteadmin dependency` \
         php-xdebug \
-        python \
+        python2 \
         rsync \
         rsyslog \
+        systemctl \
         x11vnc \
         xvfb
 
@@ -60,7 +62,7 @@ RUN npm install --global c9 gdb-mi-parser
 
 # Install Python packages
 RUN pip3 install \
-        git+git://github.com/cs50/ikp3db.git \
+        git+https://github.com/cs50/ikp3db.git \
         plotly \
         pylint \
         pylint_django \

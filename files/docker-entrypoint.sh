@@ -86,7 +86,8 @@ elif [[ $INIT_ONLY -eq 1 ]]; then
 fi
 
 echo "starting rsyslog..."
-sudo service rsyslog start
+sudo systemctl enable rsyslog
+sudo systemctl start rsyslog
 
 echo "removing sudo access..."
 sudo sed -i "/^$USER ALL=(ALL) NOPASSWD:ALL$/d" /etc/sudoers
